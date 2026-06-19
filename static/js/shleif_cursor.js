@@ -5,14 +5,14 @@ function fl1() {
 function fl0() {
   flag = 0;
 }
-oldcordx = 0;
-oldcordy = 0;
+let oldcordx = 0;
+let oldcordy = 0;
 document.addEventListener("mousemove", (e) => {
   if (flag == 0) {
     return;
   }
-  cordx = e.clientX;
-  cordy = e.clientY;
+  let cordx = e.clientX;
+  let cordy = e.clientY;
   len = Math.sqrt(
     (cordy - oldcordy) * (cordy - oldcordy) +
       (cordx - oldcordx) * (cordx - oldcordx),
