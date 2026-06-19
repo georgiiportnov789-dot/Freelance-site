@@ -1,0 +1,278 @@
+/* Утилиты и адаптивная обёртка основного контента */
+.about-page-content {
+    margin-left: 240px; /* Отступ слева от меню */
+    width: calc(100% - 240px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Центрирующий контейнер с одинаковыми отступами по бокам */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+    box-sizing: border-box;
+}
+
+/* --- СЕКЦИЯ: МИССИЯ --- */
+.mission-title {
+    font-size: 72px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+.mission-text {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    margin-bottom: 80px;
+    max-width: 900px;
+}
+
+.mission-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.mission-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.mission-card .line {
+    width: 100%;
+    height: 1px;
+    background-color: #4a4a4a;
+    margin-bottom: 24px;
+}
+
+.mission-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.mission-card p {
+    font-size: 14px;
+    color: #bfbfbf;
+    line-height: 1.5;
+}
+
+/* --- СЕКЦИЯ: ПРОЦЕСС --- */
+.process-section {
+    margin-top: 150px;
+    text-align: right;
+}
+
+.process-section h2 {
+    font-size: 72px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.process-section .subtitle {
+    font-size: 28px;
+    color: var(--text-secondary);
+    margin-bottom: 60px;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    text-align: left;
+}
+
+.process-card {
+    padding: 0 40px 0 0;
+}
+
+.process-card.with-border {
+    border-left: 1px solid #4a4a4a;
+    padding-left: 40px;
+}
+
+.process-number {
+    background: var(--text-primary);
+    color: var(--bg-main);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.process-card h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.process-card p {
+    font-size: 14px;
+    color: #bfbfbf;
+    line-height: 1.5;
+}
+
+/* --- СЕКЦИЯ: ПРАВИЛА --- */
+.rules-section {
+    margin-top: 150px;
+    text-align: left;
+}
+
+.rules-section h2 {
+    font-size: 72px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.rules-section .subtitle {
+    font-size: 24px;
+    color: var(--text-secondary);
+    margin-bottom: 80px;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+}
+
+.rule-card {
+    position: relative;
+    padding: 40px;
+}
+
+.rule-card::before, .rule-card::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 4px solid var(--text-primary);
+}
+
+.rule-card::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.rule-card::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+.rule-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.rule-card p {
+    font-size: 14px;
+    color: #bfbfbf;
+    line-height: 1.5;
+}
+
+/* --- СЕКЦИЯ: СОЗДАТЕЛИ САЙТА --- */
+.creators-section {
+    margin-top: 150px;
+    text-align: right;
+    padding-bottom: 80px;
+}
+
+.creators-section h2 {
+    font-size: 72px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.creators-section .subtitle {
+    font-size: 26px;
+    color: var(--text-secondary);
+    margin-bottom: 80px;
+    display: inline-block;
+    max-width: 600px;
+    text-align: right;
+    line-height: 1.4;
+}
+
+.creators-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    text-align: left;
+}
+
+.creator-card {
+    border-top: 1px solid #4a4a4a;
+    padding-top: 30px;
+}
+
+.creator-card h3 {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.creator-card p {
+    font-size: 16px;
+    color: var(--text-primary);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* --- Обновленные аватарки создателей --- */
+.creator-avatars {
+    display: flex;
+    justify-content: flex-start;
+    gap: 70px; /* Отступ между серой аватаркой и белым кругом */
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.avatar-image {
+    width: 72px;
+    height: 72px;
+    background-color: #d9d9d9;
+    border-radius: 50%;
+    object-fit: cover; /* Обрезает картинку ровно по кругу */
+    display: block;
+}
+
+.icon-circle {
+    width: 72px;
+    height: 72px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-circle svg {
+    width: 44px; /* Фиксирует размер SVG внутри круга */
+    height: 44px;
+    display: block;
+}
