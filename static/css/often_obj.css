@@ -4,12 +4,12 @@
   font-weight: medium;
   color: var(--text-secondary);
   size: 18px;
+  width: max-content;
+  height: min-content;
 }
 .realtimeTime {
   color: var(--text-primary);
   size: 18px;
-  width: min-content;
-  height: min-content;
 }
 
 .skillforge {
