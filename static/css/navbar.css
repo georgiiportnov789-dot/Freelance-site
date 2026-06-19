@@ -19,6 +19,11 @@ body {
   font-family: var(--font-main);
   gap: 0px;
 }
+.navbar {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
 .navbar__title__logo {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -39,7 +44,7 @@ body {
 }
 .navbar__title {
   width: 200px;
-  height: 60px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,19 +53,46 @@ body {
   border-radius: var(--radius-md);
   transition:
     width 0.3s ease,
-    height 0.3s ease,
     border-radius 0.3s ease;
 }
 .navbar__menu {
+  display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 290px;
+  height: 0px;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
+}
+.menu__item__button * {
+  display: none;
+}
+.menu__item__button {
+  width: 290px;
+  height: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  background-color: var(--bg-surface);
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
+  border-style: none;
 }
 .navbar__title:hover {
   width: 290px;
-  height: 70px;
+
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
 .navbar__title:hover .logo__element {
   transform: rotate(45deg);
   transition: transform 0.3s ease;
+}
+.navbar:has(.navbar__title:hover) .menu__item__button,
+.navbar__menu {
+
+  height: 70px;
 }
