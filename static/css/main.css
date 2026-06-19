@@ -1,6 +1,8 @@
 body {
   position: relative;
   display: flex;
+
+  height: 5000px;
   justify-content: center;
   padding: 20px;
   background-color: var(--bg-main);

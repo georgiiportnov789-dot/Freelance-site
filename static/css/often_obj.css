@@ -21,3 +21,23 @@
   width: min-content;
   height: min-content;
 }
+
+.spawned-photo {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+
+  transform: translate(-50%, -50%);
+  animation: fadeAway 2s forwards ease-out;
+}
+
+@keyframes fadeAway {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
