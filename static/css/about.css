@@ -1,16 +1,16 @@
-/* Утилиты и адаптивная обёртка основного контента */
-.about-page-content {
-    margin-left: 240px; /* Отступ слева от меню */
+
+.about__us__main {
+    margin-left: 240px; /* Отступ под ширину вашей навигации */
     width: calc(100% - 240px);
-    display: flex;
-    flex-direction: column;
+    padding: 20px; /* Добавьте отступы внутри, если нужно */
+    box-sizing: border-box;
 }
 
 /* Центрирующий контейнер с одинаковыми отступами по бокам */
 .container {
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0; /* Было 0 auto, теперь просто 0 */
     padding: 0 60px;
     box-sizing: border-box;
 }
