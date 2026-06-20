@@ -1,3 +1,9 @@
+/* Переопределяем ломающее правило из main.css */
+html body * {
+    width: auto;
+    height: auto;
+}
+
 
 .about__us__main {
     margin-left: 240px; /* Отступ под ширину вашей навигации */
@@ -5,6 +11,7 @@
     padding: 20px; /* Добавьте отступы внутри, если нужно */
     box-sizing: border-box;
 }
+
 
 /* Центрирующий контейнер с одинаковыми отступами по бокам */
 .container {
@@ -14,6 +21,8 @@
     padding: 0 60px;
     box-sizing: border-box;
 }
+
+
 
 /* --- СЕКЦИЯ: МИССИЯ --- */
 .mission-title {
