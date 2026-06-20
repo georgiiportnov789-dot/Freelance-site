@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SKILLFORGE</title>
     <link rel="stylesheet" href="../static/css/navbar.css" />
-    <link rel="stylesheet" href="../static/css/time.css" />
+    <link rel="stylesheet" href="../static/css/often_obj.css" />
     <link rel="stylesheet" href="../static/css/main.css" />
   </head>
   <body>
@@ -77,13 +77,25 @@
         </li>
       </ul>
     </navbar>
-    <div style="width: 100%; display: flex; justify-content: flex-start">
+    <div
+      class="imgs-after-cursor iac"
+      onmouseenter="fl1()"
+      onmouseleave="fl0()"
+    >
       <!-- Реальное время -->
       <date class="realtimeLocal"
         >LOCAL&nbsp /&nbsp <time class="realtimeTime">00:00:00</time></date
       >
+      <div class="iac__content">
+        <h1 class="skillforge">SKILLFORGE</h1>
+        <p class="iac__content__description">
+          Платформа фриланса с красивым интерфейсом для поиска заказов,
+          портфолио и верификации исполнителей.
+        </p>
+      </div>
     </div>
   </body>
   <script src="../static/js/realtime.js"></script>
+  <script src="../static/js/shleif_cursor.js"></script>
 </html>
 Ï
