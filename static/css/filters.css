@@ -3,9 +3,9 @@
 
   flex-direction: row;
   justify-content: space-between;
-  align-content: center;
+  align-items: center;
   width: 100%;
-  height: 70px;
+  height: 60px;
 }
 .f0__filter {
   display: flex;
@@ -90,7 +90,7 @@
 .list__item {
   display: flex;
   align-items: space-between;
-  justify-content: center;
+  justify-items: center;
   width: 100%;
   height: min-content;
   padding: var(--space-sm);
@@ -191,4 +191,96 @@
   width: 32px;
   height: 13px;
   object-fit: contain;
+}
+
+.f0__view-btn-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.f0__view-label {
+  cursor: pointer;
+  position: relative;
+}
+
+.f0__view-radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: #0b0b0b;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.view-btn--grid {
+  display: grid;
+  grid-template-columns: repeat(2, 6px);
+  grid-template-rows: repeat(2, 6px);
+  gap: 3px;
+  place-content: center;
+}
+
+.view-btn__dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--text-primary, #ffffff);
+  border-radius: 1.5px;
+}
+
+.view-btn--list {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.view-btn__line {
+  height: 3px;
+  background-color: var(--text-primary, #ffffff);
+  border-radius: 1.5px;
+}
+
+.view-btn__line:nth-child(1) {
+  width: 16px;
+}
+.view-btn__line:nth-child(2) {
+  width: 12px;
+}
+.view-btn__line:nth-child(3) {
+  width: 8px;
+}
+
+.f0__view-radio:checked + .view-btn {
+  border-color: var(--text-primary, #ffffff);
+}
+
+.f0__view-label:hover .view-btn {
+  background-color: #121212;
+}
+
+.vacancies-container:has(.f0__view-radio[value="grid"]:checked)
+  .vacancies-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.vacancies-container:has(.f0__view-radio[value="list"]:checked)
+  .vacancies-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
