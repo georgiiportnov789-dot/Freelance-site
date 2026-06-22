@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация аккаунта</title>
+    <link rel="stylesheet" href="../static/css/navbar.css" />
+    <link rel="stylesheet" href="../static/css/often_obj.css" />
+    <link rel="stylesheet" href="../static/css/main.css" />
+    <link rel="stylesheet" href="../static/css/filters.css" />
+    <link rel="stylesheet" href="../static/css/register-modal.css" />
+    <link rel="stylesheet" href="../static/css/register.css" />
+</head>
+<body>
+
+    <div class="register-modal-overlay is-open" id="registerModalOverlay">
+      <div class="register-window">
+        <h1 class="register-window__title">Регистрация аккаунта</h1>
+
+        <div id="result-message" style="margin-bottom: 15px; font-size: 14px;"></div>
+
+        <form>
+          
+          <div class="register-window__field">
+            <label class="register-window__label" for="email">Почта</label>
+            <input class="register-window__input" type="email" id="email" name="email" placeholder="Введите почту" required />
+          </div>
+
+          <div class="register-window__field">
+            <label class="register-window__label" for="fullname">ФИО</label>
+            <input class="register-window__input" type="text" id="fullname" name="fullname" placeholder="Введите ФИО" required />
+          </div>
+
+          <div class="register-window__field">
+            <label class="register-window__label" for="password">Пароль</label>
+            <input class="register-window__input" type="password" id="password" name="password" placeholder="Введите пароль" required />
+          </div>
+
+          <div class="register-window__field">
+            <input class="register-window__input" type="password" id="password-confirm" name="password_confirm" placeholder="Подтвердите пароль" required />
+          </div>
+
+          <button 
+            class="register-window__submit" 
+            type="submit"
+            hx-post="/register" 
+            hx-target="#result-message"
+            hx-swap="innerHTML">
+            Зарегистрироваться
+          </button>
+        </form>
+
+        <button class="register-window__yandex" type="button">
+          <img class="register-window__yandex-icon" src="{{ url_for('static', path='media/sistem-media/yandex.png') }}" alt="Яндекс" />
+          Продолжить с Яндекс
+        </button>
+
+        <p class="register-window__footer">
+          Уже есть аккаунт? 
+          <a class="register-window__link" href="{{ url_for('login') }}">Войти</a>
+        </p>
+      </div>
+    </div>
+</body>
+</html>
