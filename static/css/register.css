@@ -1,0 +1,131 @@
+/* Стили только для окна регистрации (.register-window) */
+body {
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  font-family: var(--font-main);
+  box-sizing: border-box;
+}
+
+.register-window {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--bg-main);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.register-window * {
+  box-sizing: border-box;
+  font-family: var(--font-main);
+}
+
+.register-window__title {
+  color: var(--text-primary);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 var(--space-xl) 0;
+}
+
+.register-window__field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-md);
+}
+
+.register-window__label {
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.register-window__input {
+  width: 100%;
+  background-color: var(--bg-surface-light);
+  border: none;
+  outline: none;
+  border-radius: var(--radius-pill);
+  padding: 14px 20px;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.register-window__input::placeholder {
+  color: var(--text-secondary);
+}
+
+.register-window__input:focus {
+  outline: 2px solid var(--text-muted);
+}
+
+.register-window__submit {
+  width: 100%;
+  background-color: var(--action-bg);
+  color: var(--action-text);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 16px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: var(--space-sm);
+}
+
+.register-window__submit:hover {
+  opacity: 0.9;
+}
+
+.register-window__yandex {
+  width: 100%;
+  background-color: var(--bg-surface-light);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+.register-window__yandex:hover {
+  background-color: var(--bg-surface);
+}
+
+.register-window__yandex-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-block;
+}
+
+.register-window__footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-top: var(--space-lg);
+}
+
+.register-window__link {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-window__link:hover {
+  text-decoration: underline;
+}

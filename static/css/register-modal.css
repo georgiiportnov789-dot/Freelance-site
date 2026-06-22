@@ -1,0 +1,95 @@
+/* Стили модального окна-обёртки для register.html на главной странице */
+
+.register-modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.register-modal-overlay.is-open {
+  display: flex !important;
+}
+
+/* Окно регистрации внутри модалки */
+.register-modal-overlay .register-window {
+  background-color: var(--bg-surface) !important;
+  width: 100% !important;
+  max-width: 420px !important;
+  max-height: 90vh !important;
+  height: auto !important;
+  overflow-y: auto;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  position: relative !important;
+  padding: var(--space-xl) var(--space-lg) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+/* Изолируем элементы модалки от ломающего правила "body *" из main.css */
+.register-modal-overlay * {
+  width: auto;
+  height: auto;
+  box-sizing: border-box !important;
+}
+
+/* Восстанавливаем правильную ширину и блочную модель полей формы */
+.register-modal-overlay .register-window__field {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin-bottom: var(--space-md) !important;
+}
+
+.register-modal-overlay .register-window__label {
+  display: block !important;
+  margin-bottom: var(--space-xs) !important;
+  width: 100% !important;
+}
+
+.register-modal-overlay .register-window__input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 14px 20px !important; /* Возвращаем внутренние отступы полей */
+}
+
+/* Растягиваем кнопки во всю ширину */
+.register-modal-overlay .register-window__submit {
+  width: 100% !important;
+  margin-top: var(--space-sm) !important;
+  padding: 16px 20px !important;
+}
+
+.register-modal-overlay .register-window__yandex {
+  width: 100% !important;
+  margin-top: var(--space-md) !important;
+  padding: 14px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--space-sm) !important;
+}
+
+/* Фикс для иконки Яндекса, чтобы она не сжималась */
+.register-modal-overlay .register-window__yandex-icon {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.register-modal-overlay .register-window__footer {
+  width: 100% !important;
+  text-align: center !important;
+  margin-top: var(--space-lg) !important;
+}
