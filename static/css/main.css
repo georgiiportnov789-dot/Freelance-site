@@ -2,9 +2,8 @@ body {
   font-family: "Fira Sans", sans-serif;
   position: relative;
   display: flex;
-
-  height: 5000px;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   padding: 20px;
   background-color: var(--bg-main);
 }
@@ -33,4 +32,13 @@ Body * {
   color: var(--text-secondary);
   font-size: 14px;
   text-align: end;
+}
+
+body::-webkit-scrollbar {
+  width: 5px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--bg-surface-light);
+  border-radius: 4px;
 }
