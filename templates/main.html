@@ -414,25 +414,37 @@
           />
         </div>
       </form>
+      <div class="f0__view-btn-group">
+        <label class="f0__view-label">
+          <input
+            type="radio"
+            class="f0__view-radio"
+            name="feed_view"
+            value="grid"
+            checked
+          />
+          <div class="view-btn view-btn--grid">
+            <div class="view-btn__dot"></div>
+            <div class="view-btn__dot"></div>
+            <div class="view-btn__dot"></div>
+            <div class="view-btn__dot"></div>
+          </div>
+        </label>
 
-      <button
-        class="f0__view-btn view-btn view-btn--grid"
-        aria-label="Показать плиткой"
-      >
-        <div class="view-btn__dot"></div>
-        <div class="view-btn__dot"></div>
-        <div class="view-btn__dot"></div>
-        <div class="view-btn__dot"></div>
-      </button>
-
-      <button
-        class="f0__view-btn view-btn view-btn--list"
-        aria-label="Показать списком"
-      >
-        <div class="view-btn__line"></div>
-        <div class="view-btn__line"></div>
-        <div class="view-btn__line"></div>
-      </button>
+        <label class="f0__view-label">
+          <input
+            type="radio"
+            class="f0__view-radio"
+            name="feed_view"
+            value="list"
+          />
+          <div class="view-btn view-btn--list">
+            <div class="view-btn__line"></div>
+            <div class="view-btn__line"></div>
+            <div class="view-btn__line"></div>
+          </div>
+        </label>
+      </div>
     </div>
 
     <div id="filters-output" class="vacancies-container">
