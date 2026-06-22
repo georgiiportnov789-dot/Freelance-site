@@ -26,6 +26,7 @@ Body * {
   display: flex;
   justify-self: flex-end;
   align-items: flex-end;
+  align-self: center;
   flex-direction: column;
 }
 .iac__content__description {
