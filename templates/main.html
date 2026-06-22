@@ -447,18 +447,17 @@
       </div>
     </div>
 
-    <div id="filters-output" class="vacancies-container">
-      <main class="vacancies-layout">
-        {% for vacancy in vacancies %}
-        <div class="card">
-          <div class="card__image-wrapper">
-            <img
-              src="{{ vacancy.img }}"
-              alt="{{ vacancy.title }}"
-              class="card__image"
-            />
-          </div>
+    <main id="filters-output" class="vacancies-layout">
+      {% for vacancy in vacancies %}
+      <div class="card">
+        <div class="card__image-wrapper">
+          <img
+            src="../static/media/sistem-media/Image.png"
+            class="card__image"
+          />
+        </div>
 
+        <div class="card__content">
           <h3 class="card__title">{{ vacancy.title }}</h3>
 
           <div class="card__meta">
@@ -466,21 +465,22 @@
             <span class="card__deadline">{{ vacancy.dedline }}</span>
           </div>
 
-          <hr class="card__divider" />
+          <line class="card__line"></line>
 
           <div class="card__footer">
-            <span class="card__cost">до {{ vacancy.cost }}</span>
+            <span class="card__cost"
+              >до <span class="card__cost-num">{{ vacancy.cost }}</span></span
+            >
             <span class="card__responses">{{ vacancy.otcklick }}</span>
           </div>
         </div>
-        {% else %}
-        <div class="vacancies-layout__empty">
-          Объявлений по таким критериям не найдено
-        </div>
-        {% endfor %}
-      </main>
-    </div>
-
+      </div>
+      {% else %}
+      <div class="vacancies-layout__empty">
+        Объявлений по таким критериям не найдено
+      </div>
+      {% endfor %}
+    </main>
   </body>
   <script src="../static/js/realtime.js"></script>
   <script src="../static/js/shleif_cursor.js"></script>
