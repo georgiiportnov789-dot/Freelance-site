@@ -11,8 +11,8 @@ document.addEventListener("mousemove", (e) => {
   if (flag == 0) {
     return;
   }
-  let cordx = e.clientX;
-  let cordy = e.clientY;
+  let cordx = e.pageX;
+  let cordy = e.pageY;
   len = Math.sqrt(
     (cordy - oldcordy) * (cordy - oldcordy) +
       (cordx - oldcordx) * (cordx - oldcordx),
