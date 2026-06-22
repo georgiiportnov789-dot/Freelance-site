@@ -1,0 +1,208 @@
+body {
+    margin: 0;
+    background: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.topbar {
+    position: relative; /* Обязательно, чтобы логотип центрировался относительно шапки */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) 40px;
+    min-height: 80px; /* Задает стабильную высоту шапки */
+}
+
+.logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Выравнивает ровно по центру по горизонтали и вертикали */
+    margin: 0;
+    font-size: 56px; /* Большой размер надписи */
+    font-weight: 600;
+    letter-spacing: 1px; /* Небольшое расстояние между буквами для аккуратности */
+}
+
+.city {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.back-btn {
+    border: none;
+    cursor: pointer;
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+/* Изменили пропорции макета */
+.layout {
+    max-width: 1000px; 
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 600px 320px;
+    gap: 30px;
+    padding: 0 20px 40px;
+    align-items: start;
+}
+
+/* ЛЕВАЯ КАРТОЧКА */
+.task-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.task-image img {
+    width: 100%;
+    height: 260px;
+    display: block;
+    object-fit: cover;
+}
+
+.task-content {
+    padding: 32px;
+}
+
+.task-title {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.task-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.price-prefix {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* Добавили две границы для мета-информации */
+.task-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 24px 0;
+    border-top: 1px solid var(--bg-surface-light);
+    border-bottom: 1px solid var(--bg-surface-light);
+    margin-bottom: 24px;
+}
+
+.meta-label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.meta-value {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.description h3 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.description .desc-text {
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin: 0 0 20px 0;
+}
+
+.description .desc-item {
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin: 0 0 16px 0;
+}
+
+/* ПРАВАЯ КАРТОЧКА */
+.response-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    position: sticky;
+    top: 20px;
+}
+
+.response-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.response-title {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Оформление бейджа "67 людей" с прозрачным фоном и рамкой */
+.response-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    border: 1px solid var(--text-secondary);
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    background: transparent;
+}
+
+.price-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: var(--bg-surface-light);
+    color: var(--text-primary);
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.price-input::placeholder {
+    color: var(--text-secondary);
+}
+
+.apply-btn {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    background: var(--action-bg);
+    color: var(--action-text);
+    padding: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: var(--radius-sm);
+}
+
+.apply-btn:hover {
+    opacity: 0.95;
+}
+
+#response-result {
+    margin-top: 16px;
+}

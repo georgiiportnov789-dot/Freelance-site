@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/design_token.css" />
+    <link rel="stylesheet" href="../static/css/view_appliacation.css" />
+    <title>SkillForge</title>
+</head>
+<body>
+
+<header class="topbar">
+        <date class="realtimeLocal"
+        >LOCAL&nbsp /&nbsp <time class="realtimeTime">00:00:00</time></date>
+    <h1 class="logo">SKILLFORGE</h1>
+    <button class="back-btn">← Назад</button>
+</header>
+
+<main class="layout">
+
+    <section class="task-card">
+
+        <div class="task-image">
+            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200"
+                 alt="Code">
+        </div>
+
+        <div class="task-content">
+
+            <h2 class="task-title">
+                Разработка сквозного дизайна и верстка<br>
+                корпоративного сайта на HTML/CSS
+            </h2>
+
+            <div class="task-price">
+                <span class="price-prefix">до</span> 45 000 РУБЛЕЙ
+            </div>
+
+            <div class="task-meta">
+                <div>
+                    <span class="meta-label">Сроки выполнения</span>
+                    <span class="meta-value">До 28 июня 2026, 18:00</span>
+                </div>
+                <div>
+                    <span class="meta-label">Место работы</span>
+                    <span class="meta-value">Удаленно (Онлайн)</span>
+                </div>
+            </div>
+
+            <div class="description">
+                <h3>Описание задачи</h3>
+                
+                <p class="desc-text">
+                    Ищем опытного frontend-разработчика/верстальщика для реализации структуры многостраничного корпоративного портала. У нас готов подробный UX/UI макет в Figma, необходимо перенести его в чистый, валидный HTML/CSS код.<br>
+                    Что нужно сделать:
+                </p>
+
+                <p class="desc-item">— Адаптивная верстка (мобильные устройства, планшеты, десктопы).</p>
+                <p class="desc-item">— Интеграция каруселей изображений и базовых JS скриптов для интерактивных элементов.</p>
+                <p class="desc-item">— Оптимизация скорости загрузки (WebP, минификация стилей).</p>
+                <p class="desc-item">— Настройка чистой структуры проекта для последующей посадки на CMS. Ждем ваших предложений с примерами реализованных проектов! Наличие портфолио обязательно.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <aside class="response-card">
+
+        <div class="response-header">
+            <span class="response-title">Уже откликнулось:</span>
+            <!-- Бейдж теперь с прозрачным фоном и рамкой -->
+            <span class="response-badge" id="responses-count">67 людей</span>
+        </div>
+
+        <input
+            type="text"
+            class="price-input"
+            id="offer-price"
+            name="offer_price"
+            placeholder="Введите свою цену за работу">
+
+        <button
+            class="apply-btn"
+            hx-post="/api/respond"
+            hx-include="#offer-price"
+            hx-target="#response-result"
+            hx-swap="innerHTML">
+            Откликнуться
+        </button>
+
+        <div id="response-result"></div>
+
+    </aside>
+
+</main>
+  <script src="../static/js/realtime.js"></script>
+</body>
+</html> 
