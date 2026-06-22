@@ -402,3 +402,27 @@
   height: 100%;
   padding: var(--space-md) 0;
 }
+.f0__add-task {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: #0b0b0b;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+.f0__add-task__img {
+  object-fit: cover;
+}
+.f0__add-task:active {
+  border-color: var(--text-primary, #ffffff);
+}
+.f0__add-task:hover .view-btn {
+  background-color: #121212;
+}
