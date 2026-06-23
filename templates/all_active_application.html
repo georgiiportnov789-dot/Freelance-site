@@ -1,478 +1,444 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SKILLFORGE</title>
+    <title>SKILLFORGE - Профиль</title>
     <link rel="stylesheet" href="../static/css/navbar.css" />
+    <link rel="stylesheet" href="../static/css/my_profile.css" />
     <link rel="stylesheet" href="../static/css/often_obj.css" />
-    <link rel="stylesheet" href="../static/css/all_active_application.css" />
-    <link rel="stylesheet" href="../static/css/filters.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
   </head>
   <body>
-    <!-- Навигационная панель -->
-    <navbar class="navbar">
-      <logo class="navbar__title">
-        <div class="navbar__title__logo logo">
-          <div class="logo__element"></div>
-          <div class="logo__element"></div>
-          <div class="logo__element"></div>
-          <div class="logo__element"></div>
-        </div>
-        <div class="navbar__title__text-container">
-          <p class="navbar__title__text">Заявки</p>
-          <p class="navbar__title__text">Меню</p>
-        </div>
-      </logo>
+    <div class="profile-page-wrapper">
+      <header class="iac">
+        <date class="realtimeLocal">
+          LOCAL&nbsp;/&nbsp;<time class="realtimeTime">00:00:00</time>
+        </date>
 
-      <ul class="navbar__menu menu">
-        <li class="menu__item">
-          <a class="menu__item__button button" href="/main">
-            <div class="button__text">Основное</div>
-            <img
-              class="button__icon"
-              src="../static/media/navbar/основное.png"
-              alt=""
-            />
-          </a>
-        </li>
-        <li class="menu__item">
-          <a class="menu__item__button button" href="/orders">
-            <div class="button__text">Заказы</div>
-            <img
-              class="button__icon"
-              src="../static/media/navbar/заказы.png"
-              alt=""
-            />
-          </a>
-        </li>
-        <li class="menu__item">
-          <a class="menu__item__button button" href="/applications">
-            <div class="button__text">Заявки</div>
-            <img
-              class="button__icon"
-              src="../static/media/navbar/заявки.png"
-              alt=""
-            />
-          </a>
-        </li>
-        <li class="menu__item">
-          <a class="menu__item__button button" href="/my_profile">
-            <div class="button__text">Мой профиль</div>
-            <img
-              class="button__icon"
-              src="../static/media/navbar/Мой профиль.png"
-              alt=""
-            />
-          </a>
-        </li>
-        <li class="menu__item">
-          <a class="menu__item__button button" href="/about">
-            <div class="button__text">О нас</div>
-            <img
-              class="button__icon"
-              src="../static/media/navbar/О нас.png"
-              alt=""
-            />
-          </a>
-        </li>
-      </ul>
-    </navbar>
+        <navbar class="navbar">
+          <logo class="navbar__title">
+            <div class="navbar__title__logo logo">
+              <div class="logo__element"></div>
+              <div class="logo__element"></div>
+              <div class="logo__element"></div>
+              <div class="logo__element"></div>
+            </div>
+            <div class="navbar__title__text-container">
+              <p class="navbar__title__text">Мой профиль</p>
+              <p class="navbar__title__text">Меню</p>
+            </div>
+          </logo>
+          <ul class="navbar__menu menu">
+            <li class="menu__item">
+              <a class="menu__item__button button" href="/main">
+                <div class="button__text">Основное</div>
+                <img
+                  class="button__icon"
+                  src="../static/media/navbar/основное.png"
+                  alt=""
+                />
+              </a>
+            </li>
+            <li class="menu__item">
+              <a class="menu__item__button button" href="/orders">
+                <div class="button__text">Заказы</div>
+                <img
+                  class="button__icon"
+                  src="../static/media/navbar/заказы.png"
+                  alt=""
+                />
+              </a>
+            </li>
+            <li class="menu__item">
+              <a class="menu__item__button button" href="/applications">
+                <div class="button__text">Заявки</div>
+                <img
+                  class="button__icon"
+                  src="../static/media/navbar/заявки.png"
+                  alt=""
+                />
+              </a>
+            </li>
+            <li class="menu__item">
+              <a class="menu__item__button button" href="/my_profile">
+                <div class="button__text">Мой профиль</div>
+                <img
+                  class="button__icon"
+                  src="../static/media/navbar/Мой профиль.png"
+                  alt=""
+                />
+              </a>
+            </li>
+            <li class="menu__item">
+              <a class="menu__item__button button" href="/about">
+                <div class="button__text">О нас</div>
+                <img
+                  class="button__icon"
+                  src="../static/media/navbar/О нас.png"
+                  alt=""
+                />
+              </a>
+            </li>
+          </ul>
+        </navbar>
 
-    <div class="iac">
-      <!-- Реальное время -->
-      <date class="realtimeLocal">
-        LOCAL&nbsp /&nbsp
-        <time class="realtimeTime">00:00:00</time>
-      </date>
+        <h1 class="skillforge">SKILLFORGE</h1>
+      </header>
 
-      <h1 class="skillforge">SKILLFORGE</h1>
+      <main class="profile-wrapper" id="profile-main-container">
+        <section class="profile-hero">
+          <div class="profile-info-block">
+            <h2 class="profile-hero__title">ПОРТФОЛИО</h2>
+            <p class="profile-hero__subtitle">
+              Свяжитесь со мной, и давайте вместе создадим что-то потрясающее
+            </p>
+
+            <form
+              hx-get="/send-message"
+              hx-target="#message-result"
+              hx-swap="innerHTML"
+              class="profile-form"
+            >
+              <input
+                type="text"
+                name="name"
+                class="profile-form__input"
+                placeholder="Имя"
+                required
+              />
+              <input
+                type="email"
+                name="email"
+                class="profile-form__input"
+                placeholder="Почта"
+                required
+              />
+              <textarea
+                name="message"
+                class="profile-form__textarea"
+                placeholder="Сообщение"
+                required
+              ></textarea>
+              <button type="submit" class="profile-form__submit">
+                Написать
+              </button>
+              <div
+                id="message-result"
+                style="color: var(--text-secondary); font-size: 14px"
+              ></div>
+            </form>
+
+            <div class="balance-section">
+              <div class="balance-info">
+                <div class="balance-label-row">
+                  <svg
+                    class="balance-icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="1"
+                      y="4"
+                      width="18"
+                      height="13"
+                      rx="2"
+                      stroke="#8a8a8e"
+                      stroke-width="1.5"
+                    />
+                    <path d="M1 8h18" stroke="#8a8a8e" stroke-width="1.5" />
+                    <rect
+                      x="4"
+                      y="11"
+                      width="4"
+                      height="2"
+                      rx="0.5"
+                      fill="#8a8a8e"
+                    />
+                  </svg>
+                  <span class="balance-label">Ваш баланс</span>
+                </div>
+                <div class="balance-amount">
+                  <span class="balance-number">500 000</span>
+                  <div class="balance-currency">Рублей</div>
+                </div>
+              </div>
+              <div class="balance-actions">
+                <button class="balance-btn">Пополнить</button>
+                <button class="balance-btn">Вывести</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-avatar-zone">
+            <div class="profile-avatar-circle">
+              <span class="profile-avatar__text" id="user-initials"
+                >{{ user.initials }}</span
+              >
+            </div>
+            <button class="edit-profile-btn" id="edit-profile-btn">
+              Редактировать профиль
+            </button>
+          </div>
+        </section>
+
+        <section class="profile-details-grid">
+          <div class="details-column">
+            <span class="details-column__label">
+              Соц-сети
+              <button
+                class="add-btn"
+                id="add-social-btn"
+                title="Добавить соцсеть"
+              >
+                +
+              </button>
+            </span>
+            <div class="details-column__list" id="social-links-list">
+              {% for social in user.socials %}
+              <a href="{{ social.url }}" class="details-column__link"
+                >{{ social.name }} ↗</a
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <div class="details-column">
+            <span class="details-column__label">Университет</span>
+            <span class="details-column__value" id="user-university-text"
+              >{{ user.university }}</span
+            >
+          </div>
+
+          <div class="details-column">
+            <span class="details-column__label">
+              Телефон
+              <button
+                class="add-btn"
+                id="add-phone-btn"
+                title="Изменить телефон"
+              >
+                +
+              </button>
+            </span>
+            <span class="details-column__value" id="user-phone-text"
+              >{{ user.phone }}</span
+            >
+          </div>
+
+          <div class="details-column">
+            <span class="details-column__label">Почта</span>
+            <a
+              href="mailto:{{ user.email }}"
+              class="details-column__link details-column__link--email"
+              >{{ user.email }} ↗</a
+            >
+          </div>
+        </section>
+
+        <section class="profile-about-section">
+          <div class="profile-about__sidebar">
+            <h3 class="profile-about__title-vertical">Обо мне</h3>
+          </div>
+          <div class="profile-about__content-list">
+            {% for item in user.achievements %}
+            <div class="achievement-card">
+              <div class="achievement-card__year">{{ item.year }}</div>
+              <div class="achievement-card__text">{{ item.description }}</div>
+            </div>
+            <hr class="achievement-divider" />
+            {% endfor %}
+          </div>
+        </section>
+      </main>
     </div>
-    <!--Строка с фильтрами брать отсуда-->
-    <div class="f0" style="margin-top: 40px">
-      <form
-        class="f0__filter"
-        hx-get="/filters/myapplications"
-        hx-trigger="change, keyup delay:400ms"
-        hx-target="#filters-output"
-      >
-        <div class="f0__logo">
-          <div class="f0__logo-icon f0__logo">
-            <div class="f0__logo__element"></div>
-            <div class="f0__logo__element"></div>
-            <div class="f0__logo__element"></div>
-            <div class="f0__logo__element"></div>
-          </div>
-          <p class="f0__logo-text">Фильтры</p>
+
+    <div id="social-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Новая соцсеть</h3>
+          <button id="close-social-modal" class="modal-close">&times;</button>
         </div>
 
-        <ul class="f0__filter-list list">
-          <li class="list__item">
-            <span class="list__name">Программист / Web-разработчик</span>
+        <form
+          hx-get="/add-social"
+          hx-target="#social-links-list"
+          hx-swap="beforeend"
+          hx-on::after-request="document.getElementById('social-modal').classList.remove('active'); this.reset();"
+          class="modal-form"
+        >
+          <div class="modal-input-group">
             <input
-              type="checkbox"
-              name="professions[]"
-              value="Программист / Web-разработчик"
-              class="list__checkbox"
+              type="url"
+              name="social_url"
+              class="modal-input"
+              placeholder="Ссылка на профиль"
+              required
             />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Разработчик веб и мультимедийных приложений</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Разработчик веб и мультимедийных приложений"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Специалист по тестированию ПО (QA-инженер)</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по тестированию ПО (QA-инженер)"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Администратор баз данных</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Администратор баз данных"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Системный администратор</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Системный администратор"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Специалист по информационным системам</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по информационным системам"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Технический писатель</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Технический писатель"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Специалист по глобальным компьютерным сетям</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по глобальным компьютерным сетям"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Инженер-строитель</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер-строитель"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Инженер по ремонту и обслуживанию автомобильных дорог</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер по ремонту и обслуживанию автомобильных дорог"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Транспортный планировщик</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Транспортный планировщик"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Специалист по сметному делу (Инженер-сметчик)</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по сметному делу (Инженер-сметчик)"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Инженер по водоснабжению и водоотведению</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер по водоснабжению и водоотведению"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Архитектор-проектировщик</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Архитектор-проектировщик"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Ландшафтный архитектор</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Ландшафтный архитектор"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Дизайнер садово-паркового искусства</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Дизайнер садово-паркового искусства"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Специалист по лесному и лесопарковому хозяйству</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по лесному и лесопарковому хозяйству"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Технолог деревообработки</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Технолог деревообработки"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Промышленный эколог / Специалист по техносферной
-              безопасности</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Промышленный эколог / Специалист по техносферной безопасности"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Инженер по техническому обслуживанию и ремонту
-              автотранспорта</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер по техническому обслуживанию и ремонту автотранспорта"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Инженер-технолог деревоперерабатывающих производств</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер-технолог деревоперерабатывающих производств"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Специалист по энерго- и ресурсосберегающим процессам в химической
-              технологии</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по энерго- и ресурсосберегающим процессам в химической технологии"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Специалист по экономической безопасности</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по экономической безопасности"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Специалист по государственному и муниципальному управлению</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по государственному и муниципальному управлению"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name"
-              >Менеджер по недвижимости / Специалист по оценке бизнеса</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Менеджер по недвижимости / Специалист по оценке бизнеса"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Бухгалтер / Экономист</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Бухгалтер / Экономист"
-              class="list__checkbox"
-            />
-          </li>
-          <li class="list__item">
-            <span class="list__name">Специалист банковского дела</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист банковского дела"
-              class="list__checkbox"
-            />
-          </li>
-        </ul>
-
-        <div class="f0__salary-group">
-          <p class="f0__salary-title">Зарплата</p>
-          <input
-            type="number"
-            name="salary_from"
-            placeholder="От"
-            class="f0__salary-input"
-          />
-          <img
-            src="../static/media/sistem-media/cost.svg"
-            class="f0__salary-icon"
-            alt=""
-          />
-          <input
-            type="number"
-            name="salary_to"
-            placeholder="До"
-            class="f0__salary-input"
-          />
-        </div>
-      </form>
-      <div class="f0__view-btn-group">
-        <label class="f0__view-label">
-          <input
-            type="radio"
-            class="f0__view-radio"
-            name="feed_view"
-            value="grid"
-            checked
-          />
-          <div class="view-btn view-btn--grid">
-            <div class="view-btn__dot"></div>
-            <div class="view-btn__dot"></div>
-            <div class="view-btn__dot"></div>
-            <div class="view-btn__dot"></div>
+            <button type="submit" class="modal-submit-btn" title="Добавить">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
           </div>
-        </label>
-
-        <label class="f0__view-label">
-          <input
-            type="radio"
-            class="f0__view-radio"
-            name="feed_view"
-            value="list"
-          />
-          <div class="view-btn view-btn--list">
-            <div class="view-btn__line"></div>
-            <div class="view-btn__line"></div>
-            <div class="view-btn__line"></div>
-          </div>
-        </label>
+        </form>
       </div>
     </div>
 
-    <main id="filters-output" class="vacancies-layout">
-      {% for vacancy in vacancies %}
-      <div class="card">
-        <div class="card__image-wrapper">
-          <img
-            src="../static/media/sistem-media/Image.png"
-            class="card__image"
+    <div id="edit-profile-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Редактировать профиль</h3>
+          <button id="close-edit-profile-modal" class="modal-close">
+            &times;
+          </button>
+        </div>
+
+        <form
+          hx-get="/edit-profile"
+          hx-target="#profile-main-container"
+          hx-swap="outerHTML"
+          hx-on::after-request="document.getElementById('edit-profile-modal').classList.remove('active');"
+          class="modal-form-stacked"
+        >
+          <input
+            type="text"
+            name="name"
+            class="modal-input"
+            placeholder="Имя"
+            value="{{ user.name }}"
+            required
           />
+          <input
+            type="text"
+            name="university"
+            class="modal-input"
+            placeholder="Университет"
+            value="{{ user.university }}"
+            required
+          />
+          <button
+            type="submit"
+            class="profile-form__submit"
+            style="margin-top: 8px"
+          >
+            Сохранить изменения
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="phone-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Изменить телефон</h3>
+          <button id="close-phone-modal" class="modal-close">&times;</button>
         </div>
 
-        <div class="card__content">
-          <h3 class="card__title">{{ vacancy.title }}</h3>
-
-          <div class="card__meta">
-            <span class="card__author">{{ vacancy.avtor }}</span>
-            <span class="card__deadline">{{ vacancy.dedline }}</span>
+        <form
+          hx-get="/update-phone"
+          hx-target="#user-phone-text"
+          hx-swap="innerHTML"
+          hx-on::after-request="document.getElementById('phone-modal').classList.remove('active'); this.reset();"
+          class="modal-form"
+        >
+          <div class="modal-input-group">
+            <input
+              type="tel"
+              name="phone"
+              class="modal-input"
+              placeholder="+7 (999) 000-00-00"
+              required
+            />
+            <button type="submit" class="modal-submit-btn" title="Сохранить">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
           </div>
-
-          <line class="card__line"></line>
-
-          <div class="card__footer">
-            <span class="card__cost"
-              >до <span class="card__cost-num">{{ vacancy.cost }}</span></span
-            >
-            <span class="card__responses">{{ vacancy.otcklick }}</span>
-          </div>
-        </div>
+        </form>
       </div>
-      {% else %}
-      <div class="vacancies-layout__empty">
-        Объявлений по таким критериям не найдено
-      </div>
-      {% endfor %}
-    </main>
+    </div>
+
+    <script src="../static/js/realtime.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- 1. Логика модалки соцсетей ---
+        const addSocialBtn = document.getElementById("add-social-btn");
+        const socialModal = document.getElementById("social-modal");
+        const closeSocialBtn = document.getElementById("close-social-modal");
+
+        if (addSocialBtn && socialModal && closeSocialBtn) {
+          addSocialBtn.addEventListener("click", () =>
+            socialModal.classList.add("active"),
+          );
+          closeSocialBtn.addEventListener("click", () =>
+            socialModal.classList.remove("active"),
+          );
+          socialModal.addEventListener("click", (e) => {
+            if (e.target === socialModal)
+              socialModal.classList.remove("active");
+          });
+        }
+
+        // --- 2. Логика редактирования профиля ---
+        const editProfileBtn = document.getElementById("edit-profile-btn");
+        const editModal = document.getElementById("edit-profile-modal");
+        const closeEditBtn = document.getElementById(
+          "close-edit-profile-modal",
+        );
+
+        if (editProfileBtn && editModal && closeEditBtn) {
+          editProfileBtn.addEventListener("click", () =>
+            editModal.classList.add("active"),
+          );
+          closeEditBtn.addEventListener("click", () =>
+            editModal.classList.remove("active"),
+          );
+          editModal.addEventListener("click", (e) => {
+            if (e.target === editModal) editModal.classList.remove("active");
+          });
+        }
+
+        // --- 3. Логика модалки телефона ---
+        const addPhoneBtn = document.getElementById("add-phone-btn");
+        const phoneModal = document.getElementById("phone-modal");
+        const closePhoneBtn = document.getElementById("close-phone-modal");
+
+        if (addPhoneBtn && phoneModal && closePhoneBtn) {
+          addPhoneBtn.addEventListener("click", () =>
+            phoneModal.classList.add("active"),
+          );
+          closePhoneBtn.addEventListener("click", () =>
+            phoneModal.classList.remove("active"),
+          );
+          phoneModal.addEventListener("click", (e) => {
+            if (e.target === phoneModal) phoneModal.classList.remove("active");
+          });
+        }
+      });
+    </script>
   </body>
-  <script src="../static/js/realtime.js"></script>
 </html>

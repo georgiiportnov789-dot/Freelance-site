@@ -20,6 +20,7 @@
     height 0.5s ease;
   background-color: var(--bg-surface);
   z-index: 100;
+  gap: 8px;
 }
 .f0__filter:hover {
   width: 290px;
@@ -29,11 +30,11 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: var(--space-sm);
   align-items: center;
   width: 100%;
   height: 60px;
   flex-shrink: 0;
+  gap: 8px;
 }
 .f0__logo-text {
   display: flex;
@@ -88,11 +89,11 @@
 }
 .list__item {
   display: flex;
-  align-items: space-between;
-  justify-items: center;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   height: min-content;
-  padding: var(--space-sm);
+  padding: 8px;
   gap: var(--space-sm);
   box-sizing: border-box;
   background-color: var(--bg-surface);
@@ -145,7 +146,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm);
+  gap: 12px;
 }
 .f0__salary-title {
   display: flex;
@@ -318,7 +319,7 @@
   justify-content: space-between;
   width: 100%;
   height: 50%;
-  padding: var(--space-sm) 0;
+  padding: 8px 0;
   box-sizing: border-box;
 }
 .card__meta,
@@ -371,7 +372,11 @@
   width: 100%;
   box-sizing: border-box;
   text-align: center;
-  padding: var(--space-xl) var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  padding: 16px 12px;
   background-color: var(--bg-surface);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
@@ -382,10 +387,10 @@
   flex-direction: row;
   height: 350px;
   padding: 0;
-  padding-right: var(--space-md);
+  padding-right: 12px;
   justify-content: space-between;
   align-items: center;
-  gap: var(--space-md);
+  gap: 12px;
   width: 100%;
 }
 .f0:has(.f0__view-radio[value="list"]:checked)
@@ -400,7 +405,7 @@
   .card__content {
   width: 50%;
   height: 100%;
-  padding: var(--space-md) 0;
+  padding: 12px 0;
 }
 .f0__add-task {
   display: flex;

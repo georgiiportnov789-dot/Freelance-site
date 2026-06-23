@@ -14,12 +14,11 @@
 
 .skillforge {
   font: var(--text-secondary);
-  width: min-content;
-  height: min-content;
   color: var(--text-primary);
   font-size: 70px;
   width: min-content;
   height: min-content;
+  margin: 0px;
 }
 
 .spawned-photo {
