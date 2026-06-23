@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillForge Messenger</title>
+  <link rel="stylesheet" href="../static/css/chat.css">
+</head>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+  <div class="sf-app-container">
+    
+    <aside class="sf-sidebar">
+      <div class="sf-sidebar-header">
+        <input type="text" class="sf-search-input" placeholder="Поиск...">
+      </div>
+      
+      <div class="sf-chat-list">
+        {% for chat in chats %}
+        <div class="sf-chat-item" 
+             hx-get="{% url 'load_chat' chat.id %}" 
+             hx-trigger="click" 
+             hx-target="#chat-messages-container" 
+             hx-swap="innerHTML">
+          
+          <div class="sf-avatar">{{ chat.initials }}</div>
+          <div class="sf-chat-info">
+            <div class="sf-chat-header-row">
+              <span class="sf-chat-name">{{ chat.name }}</span>
+            </div>
+            <div class="sf-chat-preview">Нажми, чтобы открыть</div>
+          </div>
+        </div>
+        {% end-for %}
+      </div>
+    </aside>
+
+    <main class="sf-main-chat">
+      <div id="chat-messages-container" class="sf-message-area">
+        <div style="text-align: center; margin-top: 50px; color: gray;">
+          Выберите чат для начала общения
+        </div>
+      </div>
+
+      <form class="sf-input-area" 
+            hx-post="{% url 'send_message' %}" 
+            hx-target="#chat-messages-container" 
+            hx-swap="beforeend"
+            hx-on::after-request="this.reset()"> <input type="hidden" name="chat_id" id="current-chat-id" value="">
+        <input type="text" name="text" class="sf-text-input" placeholder="Написать сообщение..." required>
+        
+        <button type="submit" class="sf-send-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </main>
+  </div>
+</body>
+</html>
