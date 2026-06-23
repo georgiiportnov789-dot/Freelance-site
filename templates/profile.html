@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SKILLFORGE - Профиль</title>
     <link rel="stylesheet" href="../static/css/navbar.css" />
-    <link rel="stylesheet" href="../static/css/my_profile.css" />
+    <link rel="stylesheet" href="../static/css/profile.css" />
+    <link rel="stylesheet" href="../static/css/often_obj.css" />
   </head>
   <body>
     <div class="profile-page-wrapper">
@@ -31,14 +32,9 @@
 
         <h1 class="skillforge">SKILLFORGE</h1>
 
-        <div class="header-right">
-          <button class="profile-top-btn edit-btn">
-            Редактировать профиль
-          </button>
-          <date class="realtimeLocal">
-            LOCAL&nbsp /&nbsp <time class="realtimeTime">00:00:00</time>
-          </date>
-        </div>
+        <date class="realtimeLocal">
+          LOCAL&nbsp /&nbsp <time class="realtimeTime">00:00:00</time>
+        </date>
       </header>
 
       <main class="profile-wrapper">
@@ -74,17 +70,6 @@
                 Написать
               </button>
             </form>
-
-            <div class="balance-section">
-              <div class="balance-info">
-                <span class="balance-label">Ваш баланс</span>
-                <div class="balance-amount">500 000 <span>Рублей</span></div>
-              </div>
-              <div class="balance-actions">
-                <button class="balance-btn">Пополнить</button>
-                <button class="balance-btn">Вывести</button>
-              </div>
-            </div>
           </div>
 
           <div class="profile-avatar-zone">
@@ -96,9 +81,7 @@
 
         <section class="profile-details-grid">
           <div class="details-column">
-            <span class="details-column__label"
-              >Соц-сети <button class="add-btn">+</button></span
-            >
+            <span class="details-column__label">Соц-сети</span>
             <div class="details-column__list">
               {% for social in user.socials %}
               <a href="{{ social.url }}" class="details-column__link"
@@ -112,9 +95,7 @@
             <span class="details-column__value">{{ user.university }}</span>
           </div>
           <div class="details-column">
-            <span class="details-column__label"
-              >Телефон <button class="add-btn">+</button></span
-            >
+            <span class="details-column__label">Телефон</span>
             <span class="details-column__value">{{ user.phone }}</span>
           </div>
           <div class="details-column">
@@ -143,6 +124,7 @@
         </section>
       </main>
     </div>
+
     <script src="../static/js/realtime.js"></script>
   </body>
 </html>
