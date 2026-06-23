@@ -9,8 +9,8 @@
   --text-secondary: #8a8a8e;
   --action-bg: #ffffff;
   --action-text: #000000;
+  --accent-red: #ef326d;
 
-  /* Уменьшенные радиусы */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-pill: 999px;
@@ -24,11 +24,13 @@ body {
   color: var(--text-primary);
 }
 
+/* ─── Layout ─── */
+
 .task-create-layout {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 16px; /* Было 24px */
+  padding: 16px;
   display: flex;
   justify-content: center;
   box-sizing: border-box;
@@ -36,11 +38,13 @@ body {
 
 .task-form-container {
   width: 100%;
-  max-width: 700px; /* Было 800px */
+  max-width: 700px;
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Было 20px */
+  gap: 16px;
 }
+
+/* ─── Back button ─── */
 
 .task-form__back-btn {
   display: flex;
@@ -51,7 +55,7 @@ body {
   border-radius: var(--radius-sm);
   color: var(--text-primary);
   font-family: var(--font-main);
-  font-size: 14px; /* Было 16px */
+  font-size: 14px;
   padding: 10px 16px;
   width: max-content;
   cursor: pointer;
@@ -62,19 +66,23 @@ body {
   background-color: var(--bg-surface-light);
 }
 
+/* ─── Form ─── */
+
 .task-form {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Было 16px */
+  gap: 12px;
   width: 100%;
 }
+
+/* ─── Media slider ─── */
 
 .task-media {
   position: relative;
   width: 100%;
-  height: 260px; /* Было 320px */
+  height: 260px;
   background-color: var(--bg-surface);
-  border-radius: 16px; /* Было 20px */
+  border-radius: 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -100,13 +108,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px; /* Было 48px */
+  width: 40px;
   height: 40px;
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .task-media__add-btn:hover {
@@ -119,18 +125,16 @@ body {
   top: 12px;
   right: 12px;
   z-index: 10;
-  background-color: #ef326d;
+  background-color: var(--accent-red);
   border: none;
   border-radius: var(--radius-pill);
   color: var(--text-primary);
   font-family: var(--font-main);
-  font-size: 13px; /* Было 16px */
+  font-size: 13px;
   font-weight: 500;
-  padding: 8px 18px; /* Было 10px 24px */
+  padding: 8px 18px;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .task-media__delete-btn:hover {
@@ -147,6 +151,8 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   scroll-behavior: smooth;
+  cursor: grab;
+  user-select: none;
 }
 
 .task-media__slider::-webkit-scrollbar {
@@ -190,6 +196,8 @@ body {
   background-color: #ffffff;
 }
 
+/* ─── Form fields ─── */
+
 .task-form__row {
   display: flex;
   gap: 12px;
@@ -213,8 +221,8 @@ body {
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-family: var(--font-main);
-  font-size: 14px; /* Было 16px */
-  padding: 14px 16px; /* Было 18px 20px */
+  font-size: 14px;
+  padding: 14px 16px;
   box-sizing: border-box;
   outline: none;
   transition: border-color 0.2s ease;
@@ -231,13 +239,23 @@ body {
 }
 
 .task-form__textarea {
-  height: 140px; /* Было 200px */
+  height: 140px;
   resize: none;
 }
 
+/* ─── Date field (custom calendar trigger) ─── */
+
 .task-form__input--date {
-  color-scheme: dark;
+  cursor: pointer;
+  caret-color: transparent;
+  user-select: none;
 }
+
+.task-form__input--date:focus {
+  border-color: var(--text-primary);
+}
+
+/* ─── Submit ─── */
 
 .task-form__submit-btn {
   width: 100%;
@@ -246,14 +264,12 @@ body {
   border: none;
   border-radius: var(--radius-md);
   font-family: var(--font-main);
-  font-size: 15px; /* Было 18px */
+  font-size: 15px;
   font-weight: 600;
-  padding: 14px; /* Было 18px */
+  padding: 14px;
   cursor: pointer;
   box-sizing: border-box;
-  transition:
-    background-color 0.2s ease,
-    transform 0.1s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
   text-align: center;
   margin-top: 4px;
 }
@@ -264,4 +280,231 @@ body {
 
 .task-form__submit-btn:active {
   transform: scale(0.99);
+}
+
+/* ══════════════════════════════════════════
+   КАСТОМНЫЙ КАЛЕНДАРЬ
+══════════════════════════════════════════ */
+
+.cal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.cal-overlay.cal-overlay--visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.cal-popup {
+  background: #121212;
+  border-radius: 18px;
+  padding: 22px;
+  width: 320px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8);
+  transform: translateY(10px) scale(0.97);
+  transition: transform 0.22s ease, opacity 0.22s ease;
+  opacity: 0;
+}
+
+.cal-overlay--visible .cal-popup {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Header */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.cal-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.cal-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.cal-nav-btn {
+  background: #1c1c1e;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: background 0.15s, color 0.15s;
+  font-family: var(--font-main);
+}
+
+.cal-nav-btn:hover {
+  background: #2a2a2a;
+  color: var(--text-primary);
+}
+
+/* Day-of-week row */
+.cal-dow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.cal-dow span {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Day grid */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.13s, color 0.13s;
+  position: relative;
+  font-family: var(--font-main);
+  border: none;
+  background: transparent;
+}
+
+.cal-day:hover:not(.cal-day--empty):not(.cal-day--selected) {
+  background: #242424;
+}
+
+.cal-day--empty {
+  cursor: default;
+}
+
+.cal-day--other-month {
+  color: #444;
+}
+
+.cal-day--disabled {
+  color: #333;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.cal-day--today {
+  font-weight: 600;
+  color: var(--text-primary);
+  border: 1px solid var(--text-primary);
+}
+
+.cal-day--selected {
+  background: var(--text-primary) !important;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+
+
+/* Footer */
+.cal-footer {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #1f1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cal-footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cal-selected-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.cal-selected-val {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.cal-footer-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.cal-cancel-btn {
+  background: #1c1c1e;
+  color: var(--text-secondary);
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cal-cancel-btn:hover {
+  background: #2a2a2a;
+  color: var(--text-primary);
+}
+
+.cal-confirm-btn {
+  background: var(--text-primary);
+  color: #000000;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.cal-confirm-btn:hover {
+  background: #e0e0e0;
+}
+
+.cal-confirm-btn:active {
+  transform: scale(0.97);
 }
