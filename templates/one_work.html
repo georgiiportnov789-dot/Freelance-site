@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/design_token.css" />
+    <link rel="stylesheet" href="../static/css/one_work.css" />
+    <title>SkillForge - Просмотр задачи</title>
+</head>
+<body>
+
+    <header class="topbar">
+        <date class="realtimeLocal">LOCAL&nbsp /&nbsp <time class="realtimeTime">16:12:09</time></date>
+        <h1 class="logo">SKILLFORGE</h1>
+        <button class="back-btn" onclick="history.back()">← Назад</button>
+    </header>
+
+    <main class="dashboard-layout">
+        
+        <section class="task-card">
+            <div class="task-card__cover">
+                <img src="{{ task.image_url }}" alt="Обложка: {{ task.title }}">
+            </div>
+
+            <div class="task-card__body">
+                <div class="task-header">
+                    <div class="task-header__info">
+                        <h2 class="task-title">
+                            {{ task.title }}
+                        </h2>
+                        <div class="task-price">
+                            <span class="text-secondary">{{ task.price_prefix }}</span> {{ task.price }} РУБЛЕЙ
+                        </div>
+                    </div>
+                    <div class="task-header__avatar">
+                        {% if task.author_avatar_url %}
+                            <img src="{{ task.author_avatar_url }}" alt="Аватар" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="task-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Сроки выполнения</span>
+                        <span class="meta-value">{{ task.deadline }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Место работы</span>
+                        <span class="meta-value">{{ task.location }}</span>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="task-description">
+                    <h3>Описание задачи</h3>
+                    <div style="white-space: pre-wrap; line-height: 1.6; font-size: 13px;">{{ task.description }}</div>
+                </div>
+
+                <div class="task-actions">
+                    <button class="delete-btn">Удалить</button>
+                </div>
+            </div>
+        </section>
+
+        <aside class="responses-panel">
+            
+            {% if task.responses %}
+                {% for response in task.responses %}
+                    <div class="response-item">
+                        <div class="response-avatar">{{ response.initials }}</div>
+                        <button class="hire-btn" data-candidate-id="{{ response.candidate_id }}">Нанять</button>
+                    </div>
+                    <hr class="divider divider--dark">
+                {% endfor %}
+            {% else %}
+                <p class="text-secondary" style="font-size: 13px; text-align: center;">Откликов пока нет</p>
+            {% endif %}
+
+        </aside>
+
+    </main>
+<script src="../static/js/realtime.js"></script>
+</body>
+</html>

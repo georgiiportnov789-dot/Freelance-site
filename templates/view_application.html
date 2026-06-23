@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/design_token.css" />
     <link rel="stylesheet" href="../static/css/view_appliacation.css" />
-    <title>SkillForge</title>
+    <title>SKILLFORGE ПРОСМОТОР ЗАЯВКИ</title>
 </head>
 <body>
 
 <header class="topbar">
-        <date class="realtimeLocal"
-        >LOCAL&nbsp /&nbsp <time class="realtimeTime">00:00:00</time></date>
+    <date class="realtimeLocal">LOCAL&nbsp /&nbsp <time class="realtimeTime">00:00:00</time></date>
     <h1 class="logo">SKILLFORGE</h1>
-    <button class="back-btn">← Назад</button>
+    <button class="back-btn" onclick="history.back()">← Назад</button>
 </header>
 
 <main class="layout">
@@ -21,44 +20,35 @@
     <section class="task-card">
 
         <div class="task-image">
-            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1200"
-                 alt="Code">
+            <img src="{{ task.image_url }}" alt="Обложка задачи: {{ task.title }}">
         </div>
 
         <div class="task-content">
 
             <h2 class="task-title">
-                Разработка сквозного дизайна и верстка<br>
-                корпоративного сайта на HTML/CSS
+                {{ task.title }}
             </h2>
 
             <div class="task-price">
-                <span class="price-prefix">до</span> 45 000 РУБЛЕЙ
+                <span class="price-prefix"> ДО </span> {{ task.price }} РУБЛЕЙ
             </div>
 
             <div class="task-meta">
                 <div>
                     <span class="meta-label">Сроки выполнения</span>
-                    <span class="meta-value">До 28 июня 2026, 18:00</span>
+                    <span class="meta-value">{{ task.deadline }}</span>
                 </div>
                 <div>
                     <span class="meta-label">Место работы</span>
-                    <span class="meta-value">Удаленно (Онлайн)</span>
+                    <span class="meta-value">{{ task.location }}</span>
                 </div>
             </div>
 
             <div class="description">
                 <h3>Описание задачи</h3>
                 
-                <p class="desc-text">
-                    Ищем опытного frontend-разработчика/верстальщика для реализации структуры многостраничного корпоративного портала. У нас готов подробный UX/UI макет в Figma, необходимо перенести его в чистый, валидный HTML/CSS код.<br>
-                    Что нужно сделать:
-                </p>
-
-                <p class="desc-item">— Адаптивная верстка (мобильные устройства, планшеты, десктопы).</p>
-                <p class="desc-item">— Интеграция каруселей изображений и базовых JS скриптов для интерактивных элементов.</p>
-                <p class="desc-item">— Оптимизация скорости загрузки (WebP, минификация стилей).</p>
-                <p class="desc-item">— Настройка чистой структуры проекта для последующей посадки на CMS. Ждем ваших предложений с примерами реализованных проектов! Наличие портфолио обязательно.</p>
+                <div class="desc-text" style="white-space: pre-wrap; line-height: 1.5;">{{ task.description }}</div>
+                
             </div>
 
         </div>
@@ -69,8 +59,7 @@
 
         <div class="response-header">
             <span class="response-title">Уже откликнулось:</span>
-            <!-- Бейдж теперь с прозрачным фоном и рамкой -->
-            <span class="response-badge" id="responses-count">67 людей</span>
+            <span class="response-badge" id="responses-count">{{ task.responses_count | default('0') }} людей</span>
         </div>
 
         <input
@@ -82,7 +71,7 @@
 
         <button
             class="apply-btn"
-            hx-post="/api/respond"
+            hx-post="/api/respond/{{ task.id }}"
             hx-include="#offer-price"
             hx-target="#response-result"
             hx-swap="innerHTML">
@@ -96,4 +85,4 @@
 </main>
   <script src="../static/js/realtime.js"></script>
 </body>
-</html> 
+</html>
