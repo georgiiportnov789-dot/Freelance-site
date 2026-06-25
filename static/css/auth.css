@@ -122,3 +122,46 @@ body {
 .auth__link:hover {
   text-decoration: underline;
 }
+/* Дополнительные стили для страницы подтверждения почты (verify.html) */
+
+.auth__description {
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  line-height: 1.5;
+}
+
+.auth__input--code {
+  text-align: center;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  letter-spacing: var(--space-xs);
+}
+
+.auth__resend {
+  text-align: center;
+  margin-top: var(--space-lg);
+}
+
+.auth__resend-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  cursor: pointer;
+  padding: var(--space-xs);
+  transition: color var(--transition-default);
+}
+
+.auth__resend-btn:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+.btn__back-conteiner {
+  width: 400px;
+  display: flex;
+  justify-content: flex-end;
+}

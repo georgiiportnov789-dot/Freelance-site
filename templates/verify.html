@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Подтверждение почты — SKILLFORGE</title>
+    <link rel="stylesheet" href="../static/css/auth.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  </head>
+  <body>
+    <main class="auth">
+      <h1 class="auth__title">Подтверждение почты</h1>
+
+      <p class="auth__description">
+        Мы отправили 6-значный код подтверждения на вашу электронную почту.
+        Введите его для активации аккаунта.
+      </p>
+
+      <form
+        class="auth__form"
+        hx-post="/verify"
+        hx-target="#verify-result"
+        hx-swap="innerHTML"
+      >
+        <div class="auth__field">
+          <label class="auth__label" for="code">Код подтверждения</label>
+          <input
+            class="auth__input auth__input--code"
+            type="text"
+            id="code"
+            name="code"
+            placeholder="000000"
+            maxlength="6"
+            pattern="\d{6}"
+            inputmode="numeric"
+            required
+            autocomplete="one-time-code"
+          />
+        </div>
+
+        <div id="verify-result" class="auth__result"></div>
+
+        <div class="auth__actions">
+          <button class="auth__submit" type="submit">Подтвердить</button>
+        </div>
+      </form>
+
+      <div class="auth__resend">
+        <button
+          class="auth__resend-btn"
+          hx-post="/resend-code"
+          hx-target="#verify-result"
+          hx-swap="innerHTML"
+        >
+          Отправить код повторно
+        </button>
+      </div>
+
+      <p class="auth__footer">
+        <a class="auth__link" href="/register">Вернуться к регистрации</a>
+      </p>
+    </main>
+  </body>
+</html>

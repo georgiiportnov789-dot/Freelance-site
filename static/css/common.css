@@ -68,6 +68,7 @@ body {
   letter-spacing: 1px;
   justify-self: center;
 }
+
 .topbar .back-btn {
   justify-self: end;
   background: var(--bg-surface);

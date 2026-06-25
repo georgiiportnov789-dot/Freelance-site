@@ -22,11 +22,11 @@ class NavbarComponent extends HTMLElement {
                     </div>
                 </div>
                 <ul class="nav__list">
-                    <li class="nav__item"><a class="nav__link" href="../templates/main.html"><span class="nav__link-text">Основное</span><img class="nav__link-icon" src="../static/media/navbar/основное.png" alt=""></a></li>
-                    <li class="nav__item"><a class="nav__link" href="../templates/orders.html"><span class="nav__link-text">Заказы</span><img class="nav__link-icon" src="../static/media/navbar/заказы.png" alt=""></a></li>
-                    <li class="nav__item"><a class="nav__link" href="../templates/applications.html"><span class="nav__link-text">Заявки</span><img class="nav__link-icon" src="../static/media/navbar/заявки.png" alt=""></a></li>
-                    <li class="nav__item"><a class="nav__link" href="../templates/profile-edit.html"><span class="nav__link-text">Мой профиль</span><img class="nav__link-icon" src="../static/media/navbar/Мой профиль.png" alt=""></a></li>
-                    <li class="nav__item"><a class="nav__link" href="../templates/about.html"><span class="nav__link-text">О нас</span><img class="nav__link-icon" src="../static/media/navbar/О нас.png" alt=""></a></li>
+                    <li class="nav__item"><a class="nav__link" href="/main"><span class="nav__link-text">Основное</span><img class="nav__link-icon" src="../static/media/navbar/основное.png" alt=""></a></li>
+                    <li class="nav__item"><a class="nav__link" href="/orders"><span class="nav__link-text">Заказы</span><img class="nav__link-icon" src="../static/media/navbar/заказы.png" alt=""></a></li>
+                    <li class="nav__item"><a class="nav__link" href="/applications"><span class="nav__link-text">Заявки</span><img class="nav__link-icon" src="../static/media/navbar/заявки.png" alt=""></a></li>
+                    <li class="nav__item"><a class="nav__link" href="/my_profile"><span class="nav__link-text">Мой профиль</span><img class="nav__link-icon" src="../static/media/navbar/Мой профиль.png" alt=""></a></li>
+                    <li class="nav__item"><a class="nav__link" href="/about"><span class="nav__link-text">О нас</span><img class="nav__link-icon" src="../static/media/navbar/О нас.png" alt=""></a></li>
                 </ul>
             </nav>
         `;
