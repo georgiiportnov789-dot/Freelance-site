@@ -1,117 +1,77 @@
-/* Переопределяем ломающее правило из main.css */
-/* 1. Исправляем сжатие текста (избавляемся от min-content) */
-html body * {
-  width: auto;
-  height: auto;
-}
+@import url("tokens.css");
+@import url("common.css");
 
-html body {
-  height: auto; /* Сбрасывает фиксированные 5000px */
-  min-height: 100vh;
-  /* Растягивает фон под высоту экрана */
-}
-
-.about__us__main {
-  margin-top: 40px; /* Отступ под ширину вашей навигации */
-  width: max-content;
-  padding: 20px; /* Добавьте отступы внутри, если нужно */
-  box-sizing: border-box;
-}
-
-/* Центрирующий контейнер с одинаковыми отступами по бокам */
-.container {
+.about {
+  margin-top: 80px;
   width: 100%;
   max-width: 1200px;
-  margin: 0; /* Было 0 auto, теперь просто 0 */
-  padding: 0 60px;
+  margin: 0;
+  padding: 0 var(--space-3xl);
   box-sizing: border-box;
 }
-
-/* --- СЕКЦИЯ: МИССИЯ --- */
-.mission-title {
-  font-size: 72px;
+.about__title {
+  font-size: var(--font-size-6xl);
   font-weight: 400;
   color: var(--text-primary);
   margin-bottom: 30px;
   letter-spacing: 1px;
 }
-
-.mission-text {
-  font-size: 18px;
+.about__text {
+  font-size: var(--font-size-lg);
   line-height: 1.5;
   color: var(--text-primary);
   margin-bottom: 80px;
   max-width: 900px;
 }
-
-.mission-grid {
+.about__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  gap: var(--space-2xl);
 }
-
-.mission-card {
+.about__card {
   display: flex;
   flex-direction: column;
 }
-
-.mission-card .line {
+.about__card-line {
   width: 100%;
   height: 1px;
-  background-color: #4a4a4a;
-  margin-bottom: 24px;
+  background: #4a4a4a;
+  margin-bottom: var(--space-lg);
 }
-
-.mission-card h3 {
-  font-size: 20px;
+.about__card h3 {
+  font-size: var(--font-size-xl);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 12px;
 }
-
-.mission-card p {
-  font-size: 14px;
+.about__card p {
+  font-size: var(--font-size-base);
   color: #bfbfbf;
   line-height: 1.5;
 }
-
-/* --- СЕКЦИЯ: ПРОЦЕСС --- */
-.process-section {
+.about__process {
   margin-top: 150px;
   text-align: right;
 }
-
-.process-section h2 {
-  font-size: 72px;
-  font-weight: 400;
-  color: var(--text-primary);
-  margin-bottom: 20px;
-  letter-spacing: 1px;
-}
-
-.process-section .subtitle {
-  font-size: 28px;
+.about__process .about__subtitle {
+  font-size: var(--font-size-2xl);
   color: var(--text-secondary);
-  margin-bottom: 60px;
+  margin-bottom: var(--space-3xl);
 }
-
-.process-grid {
+.about__process-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
   text-align: left;
 }
-
-.process-card {
+.about__process-card {
   padding: 0 40px 0 0;
 }
-
-.process-card.with-border {
+.about__process-card--border {
   border-left: 1px solid #4a4a4a;
   padding-left: 40px;
 }
-
-.process-number {
+.about__process-number {
   background: var(--text-primary);
   color: var(--bg-main);
   width: 64px;
@@ -120,108 +80,77 @@ html body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: var(--font-size-2xl);
   font-weight: 700;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-lg);
 }
-
-.process-card h3 {
-  font-size: 22px;
+.about__process-card h3 {
+  font-size: var(--font-size-xl);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 12px;
 }
-
-.process-card p {
-  font-size: 14px;
+.about__process-card p {
+  font-size: var(--font-size-base);
   color: #bfbfbf;
   line-height: 1.5;
 }
-
-/* --- СЕКЦИЯ: ПРАВИЛА --- */
-.rules-section {
+.about__rules {
   margin-top: 150px;
   text-align: left;
 }
-
-.rules-section h2 {
-  font-size: 72px;
-  font-weight: 400;
-  color: var(--text-primary);
-  margin-bottom: 15px;
-  letter-spacing: 1px;
-}
-
-.rules-section .subtitle {
-  font-size: 24px;
+.about__rules .about__subtitle {
+  font-size: var(--font-size-2xl);
   color: var(--text-secondary);
   margin-bottom: 80px;
 }
-
-.rules-grid {
+.about__rules-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
 }
-
-.rule-card {
+.about__rule {
   position: relative;
   padding: 40px;
 }
-
-.rule-card::before,
-.rule-card::after {
+.about__rule::before,
+.about__rule::after {
   content: "";
   position: absolute;
   width: 24px;
   height: 24px;
   border: 4px solid var(--text-primary);
 }
-
-.rule-card::before {
+.about__rule::before {
   top: 0;
   left: 0;
   border-right: none;
   border-bottom: none;
 }
-
-.rule-card::after {
+.about__rule::after {
   bottom: 0;
   right: 0;
   border-left: none;
   border-top: none;
 }
-
-.rule-card h3 {
-  font-size: 20px;
+.about__rule h3 {
+  font-size: var(--font-size-xl);
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 12px;
 }
-
-.rule-card p {
-  font-size: 14px;
+.about__rule p {
+  font-size: var(--font-size-base);
   color: #bfbfbf;
   line-height: 1.5;
 }
-
-/* --- СЕКЦИЯ: СОЗДАТЕЛИ САЙТА --- */
-.creators-section {
+.about__creators {
   margin-top: 150px;
   text-align: right;
   padding-bottom: 80px;
 }
-
-.creators-section h2 {
-  font-size: 72px;
-  font-weight: 400;
-  color: var(--text-primary);
-  margin-bottom: 15px;
-  letter-spacing: 1px;
-}
-
-.creators-section .subtitle {
-  font-size: 26px;
+.about__creators .about__subtitle {
+  font-size: var(--font-size-2xl);
   color: var(--text-secondary);
   margin-bottom: 80px;
   display: inline-block;
@@ -229,63 +158,54 @@ html body {
   text-align: right;
   line-height: 1.4;
 }
-
-.creators-grid {
+.about__creators-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  gap: var(--space-2xl);
   text-align: left;
 }
-
-.creator-card {
+.about__creator {
   border-top: 1px solid #4a4a4a;
   padding-top: 30px;
 }
-
-.creator-card h3 {
-  font-size: 24px;
+.about__creator h3 {
+  font-size: var(--font-size-2xl);
   font-weight: 500;
   color: var(--text-primary);
   margin-bottom: 8px;
 }
-
-.creator-card p {
-  font-size: 16px;
+.about__creator p {
+  font-size: var(--font-size-md);
   color: var(--text-primary);
   font-weight: 500;
   line-height: 1.4;
 }
-
-/* --- Обновленные аватарки создателей --- */
-.creator-avatars {
+.about__creator-avatars {
   display: flex;
   justify-content: flex-start;
-  gap: 70px; /* Отступ между серой аватаркой и белым кругом */
+  gap: 70px;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-lg);
 }
-
-.avatar-image {
+.about__creator-avatar {
   width: 72px;
   height: 72px;
-  background-color: #d9d9d9;
+  background: #d9d9d9;
   border-radius: 50%;
-  object-fit: cover; /* Обрезает картинку ровно по кругу */
+  object-fit: cover;
   display: block;
 }
-
-.icon-circle {
+.about__creator-icon {
   width: 72px;
   height: 72px;
-  background-color: #ffffff;
+  background: var(--text-primary);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
-.icon-circle svg {
-  width: 44px; /* Фиксирует размер SVG внутри круга */
+.about__creator-icon img {
+  width: 44px;
   height: 44px;
   display: block;
 }

@@ -1,36 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SKILLFORGE</title>
+    <title>SKILLFORGE - Заказы</title>
 
+    <link rel="stylesheet" href="../static/css/common.css" />
     <link rel="stylesheet" href="../static/css/vacancy.css" />
-    <link rel="stylesheet" href="../static/css/main.css" />
   </head>
   <body>
     <navbar-component
-      data-title="Основное"
+      data-title="Заявки"
       data-subtitle="Меню"
     ></navbar-component>
 
-    <header class="nav-hero" onmouseenter="fl1()" onmouseleave="fl0()">
+    <header class="hero">
       <time class="time"
         >LOCAL&nbsp;/&nbsp;<span class="time__value">00:00:00</span></time
       >
-      <div class="nav-hero__content">
-        <h1 class="brand">SKILLFORGE</h1>
-        <p class="nav-hero__description">
-          Платформа фриланса с красивым интерфейсом для поиска заказов,
-          портфолио и верификации исполнителей.
-        </p>
-      </div>
+      <h1 class="brand">SKILLFORGE</h1>
     </header>
 
-    <div class="filters">
+    <div class="filters" style="margin-top: var(--space-2xl)">
       <form
         class="filters__form"
-        hx-get="/filters"
+        hx-get="/filters/mytasks"
         hx-trigger="change, keyup delay:400ms"
         hx-target="#filters-output"
       >
@@ -44,7 +38,7 @@
           <span class="filters__header-label">Фильтры</span>
         </div>
         <ul class="filters__list">
-          <!-- пункты фильтра (сокращено для примера) -->
+          <!-- пункты фильтра (сокращено) -->
           <li class="filters__item">
             <span class="filters__item-label"
               >Программист / Web-разработчик</span
@@ -335,6 +329,7 @@
               class="filters__item-checkbox"
             />
           </li>
+          <!-- ... остальные -->
         </ul>
         <div class="filters__salary">
           <span class="filters__salary-label">Зарплата</span>
@@ -358,34 +353,30 @@
         </div>
       </form>
       <div class="filters__view">
-        <label class="filters__view-label">
-          <input
+        <label class="filters__view-label"
+          ><input
             type="radio"
             class="filters__view-radio"
             name="feed_view"
             value="grid"
-            checked
-          />
+            checked />
           <div class="filters__view-btn filters__view-btn--grid">
             <div class="filters__view-dot"></div>
             <div class="filters__view-dot"></div>
             <div class="filters__view-dot"></div>
-            <div class="filters__view-dot"></div>
-          </div>
-        </label>
-        <label class="filters__view-label">
-          <input
+            <div class="filters__view-dot"></div></div
+        ></label>
+        <label class="filters__view-label"
+          ><input
             type="radio"
             class="filters__view-radio"
             name="feed_view"
-            value="list"
-          />
+            value="list" />
           <div class="filters__view-btn filters__view-btn--list">
             <div class="filters__view-line"></div>
             <div class="filters__view-line"></div>
-            <div class="filters__view-line"></div>
-          </div>
-        </label>
+            <div class="filters__view-line"></div></div
+        ></label>
       </div>
     </div>
 
@@ -396,7 +387,7 @@
         hx-get="/task/{{ vacancy.id }}"
         hx-target="body"
         hx-push-url="true"
-        href="view-application.html"
+        href="task-open.html"
       >
         <div class="vacancy__image-wrap">
           <img
@@ -425,14 +416,6 @@
       </div>
       {% endfor %}
     </main>
-    <footer class="foot-hero" onmouseenter="fl1()" onmouseleave="fl0()">
-      <div class="foot-hero__content">
-        <h1 class="brand">SKILLFORGE</h1>
-        <p class="foot-hero__description">
-          Практикуйся, зарабатывай, наращивай портфолио вместе с нами.
-        </p>
-      </div>
-    </footer>
 
     <script src="../static/js/realtime.js"></script>
     <script src="../static/js/shleif_cursor.js"></script>

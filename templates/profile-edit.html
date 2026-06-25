@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SKILLFORGE - Мой профиль</title>
+    <link rel="stylesheet" href="../static/css/profile-edit.css" />
+    <link rel="stylesheet" href="../static/css/common.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  </head>
+  <body>
+    <navbar-component
+      data-title="Мой профиль"
+      data-subtitle="Меню"
+    ></navbar-component>
+    <header class="hero">
+      <time class="time"
+        >LOCAL&nbsp;/&nbsp;<span class="time__value">00:00:00</span></time
+      >
+
+      <h1 class="brand">SKILLFORGE</h1>
+    </header>
+    <main class="profile" id="profile-main-container">
+      <section class="profile__hero">
+        <div class="profile__info">
+          <h2 class="profile__title">ПОРТФОЛИО</h2>
+          <p class="profile__subtitle">
+            Свяжитесь со мной, и давайте вместе создадим что-то потрясающее
+          </p>
+          <form
+            hx-get="/send-message"
+            hx-target="#message-result"
+            hx-swap="innerHTML"
+            class="profile__form"
+          >
+            <input
+              type="text"
+              name="name"
+              class="profile__input"
+              placeholder="Имя"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              class="profile__input"
+              placeholder="Почта"
+              required
+            />
+            <textarea
+              name="message"
+              class="profile__textarea"
+              placeholder="Сообщение"
+              required
+            ></textarea>
+            <button type="submit" class="profile__submit">Написать</button>
+            <div
+              id="message-result"
+              style="
+                color: var(--text-secondary);
+                font-size: var(--font-size-base);
+              "
+            ></div>
+          </form>
+
+          <div class="profile__balance">
+            <div class="profile__balance-info">
+              <div class="profile__balance-label-row">
+                <svg
+                  class="profile__balance-icon"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                >
+                  <rect
+                    x="1"
+                    y="4"
+                    width="18"
+                    height="13"
+                    rx="2"
+                    stroke="#8a8a8e"
+                    stroke-width="1.5"
+                  />
+                  <path d="M1 8h18" stroke="#8a8a8e" stroke-width="1.5" />
+                  <rect
+                    x="4"
+                    y="11"
+                    width="4"
+                    height="2"
+                    rx="0.5"
+                    fill="#8a8a8e"
+                  />
+                </svg>
+                <span class="profile__balance-label">Ваш баланс</span>
+              </div>
+              <div class="profile__balance-amount">
+                <span class="profile__balance-number">500 000</span>
+                <div class="profile__balance-currency">Рублей</div>
+              </div>
+            </div>
+            <div class="profile__balance-actions">
+              <button class="profile__balance-btn">Пополнить</button>
+              <button class="profile__balance-btn">Вывести</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile__avatar-zone">
+          <div class="profile__avatar">
+            <span class="profile__avatar-text" id="user-initials"
+              >{{ user.initials }}</span
+            >
+          </div>
+          <button class="profile__edit-btn" id="edit-profile-btn">
+            Редактировать профиль
+          </button>
+        </div>
+      </section>
+
+      <section class="profile__details">
+        <div class="profile__detail">
+          <span class="profile__detail-label"
+            >Соц-сети
+            <button
+              class="profile__add-btn"
+              id="add-social-btn"
+              title="Добавить соцсеть"
+            >
+              +
+            </button></span
+          >
+          <div class="profile__detail-list" id="social-links-list">
+            {% for social in user.socials %}
+            <a href="{{ social.url }}" class="profile__detail-link"
+              >{{ social.name }} ↗</a
+            >
+            {% endfor %}
+          </div>
+        </div>
+        <div class="profile__detail">
+          <span class="profile__detail-label">Университет</span>
+          <span class="profile__detail-value" id="user-university-text"
+            >{{ user.university }}</span
+          >
+        </div>
+        <div class="profile__detail">
+          <span class="profile__detail-label"
+            >Телефон
+            <button
+              class="profile__add-btn"
+              id="add-phone-btn"
+              title="Изменить телефон"
+            >
+              +
+            </button></span
+          >
+          <span class="profile__detail-value" id="user-phone-text"
+            >{{ user.phone }}</span
+          >
+        </div>
+        <div class="profile__detail">
+          <span class="profile__detail-label">Почта</span>
+          <a
+            href="mailto:{{ user.email }}"
+            class="profile__detail-link profile__detail-link--email"
+            >{{ user.email }} ↗</a
+          >
+        </div>
+      </section>
+
+      <section class="profile__about">
+        <div class="profile__about-sidebar">
+          <h3 class="profile__about-title">Обо мне</h3>
+        </div>
+        <div class="profile__about-list">
+          {% for item in user.achievements %}
+          <div class="profile__achievement">
+            <div class="profile__achievement-year">{{ item.year }}</div>
+            <div class="profile__achievement-text">{{ item.description }}</div>
+          </div>
+          <hr class="profile__achievement-divider" />
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+
+    <!-- Модалки -->
+    <div id="social-modal" class="modal">
+      <div class="modal__content">
+        <div class="modal__header">
+          <h3 class="modal__title">Новая соцсеть</h3>
+          <button id="close-social-modal" class="modal__close">&times;</button>
+        </div>
+        <form
+          hx-get="/add-social"
+          hx-target="#social-links-list"
+          hx-swap="beforeend"
+          hx-on::after-request="document.getElementById('social-modal').classList.remove('active'); this.reset();"
+          class="modal__form"
+        >
+          <div class="modal__input-group">
+            <input
+              type="url"
+              name="social_url"
+              class="modal__input"
+              placeholder="Ссылка на профиль"
+              required
+            />
+            <button type="submit" class="modal__submit" title="Добавить">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="edit-profile-modal" class="modal">
+      <div class="modal__content">
+        <div class="modal__header">
+          <h3 class="modal__title">Редактировать профиль</h3>
+          <button id="close-edit-profile-modal" class="modal__close">
+            &times;
+          </button>
+        </div>
+        <form
+          hx-get="/edit-profile"
+          hx-target="#profile-main-container"
+          hx-swap="outerHTML"
+          hx-on::after-request="document.getElementById('edit-profile-modal').classList.remove('active');"
+          class="modal__form-stacked"
+        >
+          <input
+            type="text"
+            name="name"
+            class="modal__input"
+            placeholder="Имя"
+            value="{{ user.name }}"
+            required
+          />
+          <input
+            type="text"
+            name="university"
+            class="modal__input"
+            placeholder="Университет"
+            value="{{ user.university }}"
+            required
+          />
+          <button
+            type="submit"
+            class="profile__submit"
+            style="margin-top: var(--space-sm)"
+          >
+            Сохранить изменения
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="phone-modal" class="modal">
+      <div class="modal__content">
+        <div class="modal__header">
+          <h3 class="modal__title">Изменить телефон</h3>
+          <button id="close-phone-modal" class="modal__close">&times;</button>
+        </div>
+        <form
+          hx-get="/update-phone"
+          hx-target="#user-phone-text"
+          hx-swap="innerHTML"
+          hx-on::after-request="document.getElementById('phone-modal').classList.remove('active'); this.reset();"
+          class="modal__form"
+        >
+          <div class="modal__input-group">
+            <input
+              type="tel"
+              name="phone"
+              class="modal__input"
+              placeholder="+7 (999) 000-00-00"
+              required
+            />
+            <button type="submit" class="modal__submit" title="Сохранить">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../static/js/realtime.js"></script>
+    <script src="../static/js/my_profile.js"></script>
+    <script src="../static/js/nav.js" defer></script>
+  </body>
+</html>

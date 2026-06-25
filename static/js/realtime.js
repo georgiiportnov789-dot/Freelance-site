@@ -1,6 +1,10 @@
-function realtime() {
-  el = document.getElementsByClassName("realtimeTime")[0];
-  el.textContent = new Date().toLocaleTimeString("ru-RU");
-}
-realtime();
-setInterval(realtime, 1000);
+(function () {
+  function updateTime() {
+    const now = new Date();
+    const timeStr = now.toTimeString().split(" ")[0];
+    const elements = document.querySelectorAll(".time__value");
+    elements.forEach((el) => (el.textContent = timeStr));
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+})();

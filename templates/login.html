@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Войти в аккаунт</title>
+    <link rel="stylesheet" href="../static/css/auth.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  </head>
+  <body>
+    <main class="auth">
+      <h1 class="auth__title">Войти в аккаунт</h1>
+      <form
+        class="auth__form"
+        hx-post="/login"
+        hx-target="#login-result"
+        hx-swap="innerHTML"
+      >
+        <div class="auth__field">
+          <label class="auth__label" for="email">Почта</label>
+          <input
+            class="auth__input"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Введите почту"
+            required
+          />
+        </div>
+        <div class="auth__field">
+          <div class="auth__label-row">
+            <label class="auth__label" for="password">Пароль</label>
+            <a href="#" class="auth__forgot">Забыли пароль?</a>
+          </div>
+          <input
+            class="auth__input"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Введите пароль"
+            required
+          />
+        </div>
+        <div id="login-result" class="auth__result"></div>
+        <div class="auth__actions">
+          <button class="auth__submit" type="submit">Войти</button>
+          <button
+            class="auth__social-btn"
+            type="button"
+            title="Войти через Яндекс"
+          >
+            <img
+              src="../static/media/sistem-media/yandex.png"
+              alt="Яндекс"
+              class="auth__social-icon"
+            />
+          </button>
+        </div>
+      </form>
+      <p class="auth__footer">
+        <span class="auth__footer-text">Нет аккаунта?</span>
+        <a class="auth__link" href="/register">Регистрация</a>
+      </p>
+    </main>
+  </body>
+</html>

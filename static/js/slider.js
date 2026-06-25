@@ -1,115 +1,77 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const fileInput = document.getElementById('fileInput');
-  const sliderContainer = document.getElementById('sliderContainer');
-  const paginationContainer = document.getElementById('paginationContainer');
-  const deleteBtn = document.getElementById('deleteBtn');
+(function () {
+  const slider = document.getElementById("sliderContainer");
+  const dots = document.getElementById("paginationContainer");
+  const fileInput = document.getElementById("fileInput");
+  const deleteBtn = document.getElementById("deleteBtn");
 
-  let selectedFiles = []; 
-  let currentIndex = 0;   
-  let isThrottled = false;
+  if (!slider || !dots || !fileInput) return;
 
-  fileInput.addEventListener('change', (event) => {
-    const newFiles = Array.from(event.target.files);
-    selectedFiles = selectedFiles.concat(newFiles);
-    
-    updateFileInput(); 
-    renderSlider();
-  });
+  let images = [];
 
-  function updateFileInput() {
-    const dataTransfer = new DataTransfer();
-    selectedFiles.forEach(file => dataTransfer.items.add(file));
-    fileInput.files = dataTransfer.files;
-  }
-
-  function renderSlider() {
-    sliderContainer.innerHTML = '';
-    paginationContainer.innerHTML = '';
-
-    if (selectedFiles.length === 0) {
-      sliderContainer.innerHTML = `
-        <div class="task-media__slide task-media__slide--placeholder">
-          <img src="../static/media/sistem-media/Image.png" alt="Заглушка" class="task-media__image" />
-        </div>`;
-      paginationContainer.innerHTML = `<span class="task-media__dot task-media__dot--active"></span>`;
-      currentIndex = 0;
+  function updateSlider() {
+    slider.innerHTML = "";
+    dots.innerHTML = "";
+    if (images.length === 0) {
+      const placeholder = document.createElement("div");
+      placeholder.className =
+        "create-task__media-slide create-task__media-slide--placeholder";
+      placeholder.innerHTML =
+        '<img src="../static/media/sistem-media/Image.png" alt="Заглушка" class="create-task__media-img">';
+      slider.appendChild(placeholder);
+      const dot = document.createElement("span");
+      dot.className = "create-task__media-dot create-task__media-dot--active";
+      dots.appendChild(dot);
       return;
     }
-
-    if (currentIndex >= selectedFiles.length) {
-      currentIndex = selectedFiles.length - 1;
-    }
-
-    selectedFiles.forEach((file, index) => {
-      const slide = document.createElement('div');
-      slide.className = 'task-media__slide';
-      slide.style.display = index === currentIndex ? 'block' : 'none'; 
-
-      const img = document.createElement('img');
-      img.src = URL.createObjectURL(file); 
-      img.className = 'task-media__image';
-      
+    images.forEach((src, i) => {
+      const slide = document.createElement("div");
+      slide.className = "create-task__media-slide";
+      const img = document.createElement("img");
+      img.src = src;
+      img.className = "create-task__media-img";
       slide.appendChild(img);
-      sliderContainer.appendChild(slide);
-
-      const dot = document.createElement('span');
-      dot.className = `task-media__dot ${index === currentIndex ? 'task-media__dot--active' : ''}`;
-      dot.addEventListener('click', () => {
-        currentIndex = index;
-        renderSlider();
+      slider.appendChild(slide);
+      const dot = document.createElement("span");
+      dot.className =
+        "create-task__media-dot" +
+        (i === 0 ? " create-task__media-dot--active" : "");
+      dot.dataset.index = i;
+      dot.addEventListener("click", () => {
+        slider.scrollTo({ left: slider.clientWidth * i, behavior: "smooth" });
       });
-      paginationContainer.appendChild(dot);
+      dots.appendChild(dot);
+    });
+    // синхронизация активной точки при прокрутке
+    slider.addEventListener("scroll", () => {
+      const index = Math.round(slider.scrollLeft / slider.clientWidth);
+      dots.querySelectorAll(".create-task__media-dot").forEach((d, i) => {
+        d.classList.toggle("create-task__media-dot--active", i === index);
+      });
     });
   }
 
-  // --- БЛОК ПРОКРУТКИ КОЛЁСИКОМ МЫШИ ---
-  sliderContainer.addEventListener('wheel', (event) => {
-    if (selectedFiles.length <= 1) return; 
-
-    event.preventDefault(); 
-
-    if (isThrottled) return;
-    isThrottled = true;
-    setTimeout(() => { isThrottled = false; }, 200); 
-
-    if (event.deltaY > 0) {
-      if (currentIndex < selectedFiles.length - 1) {
-        currentIndex++;
-        renderSlider();
-      }
-    } else if (event.deltaY < 0) {
-      if (currentIndex > 0) {
-        currentIndex--;
-        renderSlider();
-      }
-    }
-  }, { passive: false }); 
-  
-
-  deleteBtn.addEventListener('click', () => {
-    if (selectedFiles.length > 0) {
-      selectedFiles.splice(currentIndex, 1);
-      updateFileInput(); 
-      renderSlider();    
-    }
+  fileInput.addEventListener("change", (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        images.push(ev.target.result);
+        updateSlider();
+      };
+      reader.readAsDataURL(file);
+    });
+    // если нужно очистить input после добавления
+    fileInput.value = "";
   });
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-  const dateInput = document.querySelector('.task-form__input--date');
-  
-  if (dateInput) {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    let mm = today.getMonth() + 1; 
-    let dd = today.getDate();
-
-    if (dd < 10) dd = '0' + dd;
-    if (mm < 10) mm = '0' + mm;
-
-    const minDate = `${yyyy}-${mm}-${dd}`;
-    
-    dateInput.setAttribute('min', minDate);
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", () => {
+      if (images.length > 0) {
+        images.pop();
+        updateSlider();
+      }
+    });
   }
 
-});
+  updateSlider();
+})();

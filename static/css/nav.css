@@ -1,24 +1,6 @@
-@import "design_token.css";
-body {
-  display: flex;
-  justify-content: center;
-}
-.navbar ul,
-.navbar li,
-.navbar p {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.navbar a {
-  text-decoration: none;
-  color: var(--text-primary);
-  font-family: var(--font-main);
-  font-size: 16px;
-}
-
-.navbar {
+@import url("tokens.css");
+@import url("common.css");
+.nav {
   position: fixed;
   z-index: 100;
   top: 20px;
@@ -29,33 +11,29 @@ body {
   flex-direction: column;
   align-items: center;
   width: 200px;
-  height: 60px;
+  height: var(--navbar-height);
   border-radius: var(--radius-md);
   overflow: hidden;
-  box-sizing: border-box;
   transition:
-    width 0.5s ease,
-    height 0.5s ease;
+    width var(--transition-slow),
+    height var(--transition-slow);
 }
-
-.navbar:hover {
+.nav:hover {
   width: 290px;
   height: 366px;
 }
-
-.navbar__title {
+.nav__brand {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 60px;
-  min-height: 60px;
+  height: var(--navbar-height);
+  min-height: var(--navbar-height);
   gap: 10px;
-  background-color: var(--bg-surface);
+  background: var(--bg-surface);
   cursor: pointer;
 }
-
-.navbar__title__logo {
+.nav__logo {
   display: grid;
   grid-template-columns: repeat(2, 7px);
   grid-template-rows: repeat(2, 7px);
@@ -63,41 +41,35 @@ body {
   width: 16px;
   height: 16px;
 }
-
-.logo__element {
+.nav__logo-dot {
   width: 6px;
   height: 6px;
   border-radius: 1px;
-  background-color: var(--action-bg);
-  transition: transform 0.3s ease;
+  background: var(--action-bg);
+  transition: transform var(--transition-default);
 }
-
-.navbar__title:hover .logo__element {
+.nav__brand:hover .nav__logo-dot {
   transform: rotate(45deg);
 }
-
-.navbar__title__text-container {
+.nav__brand-text {
   display: flex;
   flex-direction: column;
   height: 20px;
   overflow: hidden;
 }
-
-.navbar__title__text {
+.nav__brand-line {
   height: 20px;
   line-height: 20px;
   font-family: var(--font-main);
   color: var(--text-primary);
-  font-size: 16px;
-  transition: transform 0.5s ease;
+  font-size: var(--font-size-md);
+  transition: transform var(--transition-slow);
   width: max-content;
 }
-
-.navbar:hover .navbar__title__text {
+.nav:hover .nav__brand-line {
   transform: translateY(-20px);
 }
-
-.navbar__menu {
+.nav__list {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -105,36 +77,35 @@ body {
   margin: 0;
   padding: 0;
 }
-
-.menu__item {
+.nav__item {
   width: 100%;
-  border-top: solid 1px var(--bg-surface-light);
+  border-top: 1px solid var(--bg-surface-light);
 }
-
-.menu__item__button {
+.nav__link {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 60px;
+  height: var(--navbar-height);
   padding: 0 10px;
   box-sizing: border-box;
-  background-color: var(--bg-surface);
-  transition: background-color 0.2s ease;
-}
-
-.menu__item__button:hover {
-  background-color: var(--bg-surface-light);
-}
-
-.button__text {
+  background: var(--bg-surface);
+  transition: background var(--transition-default);
+  text-decoration: none;
   color: var(--text-primary);
   font-family: var(--font-main);
-  font-size: 16px;
+  font-size: var(--font-size-md);
+}
+.nav__link:hover {
+  background: var(--bg-surface-light);
+}
+.nav__link-text {
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: var(--font-size-md);
   width: max-content;
 }
-
-.button__icon {
+.nav__link-icon {
   width: 40px;
   height: 40px;
   object-fit: contain;

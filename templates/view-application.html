@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SKILLFORGE - Просмотр заявки</title>
+    <link rel="stylesheet" href="../static/css/task.css" />
+    <link rel="stylesheet" href="../static/css/common.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <time class="time"
+        >LOCAL&nbsp;/&nbsp;<span class="time__value">00:00:00</span></time
+      >
+      <h1 class="brand">SKILLFORGE</h1>
+      <button class="back-btn" onclick="history.back()">← Назад</button>
+    </header>
+
+    <main class="task-layout">
+      <section class="task">
+        <div class="task__cover">
+          <img
+            src="{{ task.image_url }}"
+            alt="Обложка задачи: {{ task.title }}"
+          />
+        </div>
+        <div class="task__body">
+          <h2 class="task__title">{{ task.title }}</h2>
+          <div class="task__price">
+            <span class="task__price-prefix">ДО</span> {{ task.price }} РУБЛЕЙ
+          </div>
+          <div class="task__meta">
+            <div>
+              <span class="task__meta-label">Сроки выполнения</span
+              ><span class="task__meta-value">{{ task.deadline }}</span>
+            </div>
+            <div>
+              <span class="task__meta-label">Место работы</span
+              ><span class="task__meta-value">{{ task.location }}</span>
+            </div>
+          </div>
+          <div class="task__description">
+            <h3>Описание задачи</h3>
+            <div
+              class="task__desc-text"
+              style="white-space: pre-wrap; line-height: 1.5"
+            >
+              {{ task.description }}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="response-card">
+        <div class="response__header">
+          <span class="response__title">Уже откликнулось:</span
+          ><span class="response__badge" id="responses-count"
+            >{{ task.responses_count | default('0') }} людей</span
+          >
+        </div>
+        <input
+          type="text"
+          class="response__price-input"
+          id="offer-price"
+          name="offer_price"
+          placeholder="Введите свою цену за работу"
+        />
+        <button
+          class="response__apply-btn"
+          hx-post="/api/respond/{{ task.id }}"
+          hx-include="#offer-price"
+          hx-target="#response-result"
+          hx-swap="innerHTML"
+        >
+          Откликнуться
+        </button>
+        <div id="response-result"></div>
+      </aside>
+    </main>
+
+    <script src="../static/js/realtime.js"></script>
+  </body>
+</html>

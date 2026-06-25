@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SKILLFORGE - Просмотр профиля</title>
+    <link rel="stylesheet" href="../static/css/profile-view.css" />
+    <link rel="stylesheet" href="../static/css/common.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <a href="javascript:history.back()" class="back-btn">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M9 12L4 7L9 2"
+              stroke="#8a8a8e"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Назад
+        </a>
+        <h1 class="brand">SKILLFORGE</h1>
+        <time class="time"
+          >LOCAL&nbsp;/&nbsp;<span class="time__value">00:00:00</span></time
+        >
+      </header>
+
+      <main class="profile">
+        <section class="profile__hero">
+          <div class="profile__info">
+            <h2 class="profile__title">ПОРТФОЛИО</h2>
+            <p class="profile__subtitle">
+              Свяжитесь со мной, и давайте вместе создадим что-то потрясающее
+            </p>
+            <form action="/send-message" method="POST" class="profile__form">
+              <input
+                type="text"
+                name="name"
+                class="profile__input"
+                placeholder="Имя"
+                required
+              />
+              <input
+                type="email"
+                name="email"
+                class="profile__input"
+                placeholder="Почта"
+                required
+              />
+              <textarea
+                name="message"
+                class="profile__textarea"
+                placeholder="Сообщение"
+                required
+              ></textarea>
+              <button type="submit" class="profile__submit">Написать</button>
+            </form>
+          </div>
+          <div class="profile__avatar-zone">
+            <div class="profile__avatar">
+              <span class="profile__avatar-text">{{ user.initials }}</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="profile__details">
+          <div class="profile__detail">
+            <span class="profile__detail-label">Соц-сети</span>
+            <div class="profile__detail-list">
+              {% for social in user.socials %}
+              <a href="{{ social.url }}" class="profile__detail-link"
+                >{{ social.name }} ↗</a
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <div class="profile__detail">
+            <span class="profile__detail-label">Университет</span>
+            <span class="profile__detail-value">{{ user.university }}</span>
+          </div>
+          <div class="profile__detail">
+            <span class="profile__detail-label">Телефон</span>
+            <span class="profile__detail-value">{{ user.phone }}</span>
+          </div>
+          <div class="profile__detail">
+            <span class="profile__detail-label">Почта</span>
+            <a
+              href="mailto:{{ user.email }}"
+              class="profile__detail-link profile__detail-link--email"
+              >{{ user.email }} ↗</a
+            >
+          </div>
+        </section>
+
+        <section class="profile__about">
+          <div class="profile__about-sidebar">
+            <h3 class="profile__about-title">Обо мне</h3>
+          </div>
+          <div class="profile__about-list">
+            {% for item in user.achievements %}
+            <div class="profile__achievement">
+              <div class="profile__achievement-year">{{ item.year }}</div>
+              <div class="profile__achievement-text">
+                {{ item.description }}
+              </div>
+            </div>
+            <hr class="profile__achievement-divider" />
+            {% endfor %}
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="../static/js/realtime.js"></script>
+  </body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SKILLFORGE - Активная заявка</title>
+    <link rel="stylesheet" href="../static/css/task.css" />
+    <link rel="stylesheet" href="../static/css/common.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <time class="time"
+        >LOCAL&nbsp;/&nbsp;<span class="time__value">16:12:09</span></time
+      >
+      <h1 class="brand">SKILLFORGE</h1>
+      <button class="back-btn" onclick="history.back()">← Назад</button>
+    </header>
+
+    <main class="single-layout">
+      <section class="task">
+        <div class="task__cover">
+          <img src="{{ task.image_url }}" alt="Обложка: {{ task.title }}" />
+        </div>
+        <div class="task__body">
+          <div class="task__header-container">
+            <div class="task__header-text">
+              <h2 class="task__title">{{ task.title }}</h2>
+              <div class="task__price">
+                <span class="task__price-prefix">{{ task.price_prefix }}</span>
+                {{ task.price }} РУБЛЕЙ
+              </div>
+            </div>
+            <div class="task__author-avatar">
+              {% if task.author_avatar_url %}<img
+                src="{{ task.author_avatar_url }}"
+                alt="Аватар заказчика"
+              />{% endif %}
+            </div>
+          </div>
+          <div class="task__meta">
+            <div>
+              <span class="task__meta-label">Сроки выполнения</span
+              ><span class="task__meta-value">{{ task.deadline }}</span>
+            </div>
+            <div>
+              <span class="task__meta-label">Место работы</span
+              ><span class="task__meta-value">{{ task.location }}</span>
+            </div>
+          </div>
+          <div class="task__description">
+            <h3>Описание задачи</h3>
+            <div
+              class="task__desc-text"
+              style="white-space: pre-wrap; line-height: 1.5"
+            >
+              {{ task.description }}
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <hr class="footer-divider" />
+    <footer class="footer">
+      <div class="footer__col">
+        <h4>Соц-сети</h4>
+        <a href="{{ site_settings.telegram_url }}" class="footer__link"
+          >Telegram ↗</a
+        ><a href="{{ site_settings.vk_url }}" class="footer__link"
+          >Вконтакте ↗</a
+        >
+      </div>
+      <div class="footer__col">
+        <h4>Университет</h4>
+        <p class="footer__text">{{ site_settings.university_name }}</p>
+      </div>
+      <div class="footer__col">
+        <h4>Телефон</h4>
+        <p class="footer__text">{{ site_settings.phone }}</p>
+      </div>
+      <div class="footer__col">
+        <h4>Почта</h4>
+        <a href="mailto:{{ site_settings.email }}" class="footer__link"
+          >{{ site_settings.email }} ↗</a
+        >
+      </div>
+    </footer>
+
+    <script src="../static/js/realtime.js"></script>
+  </body>
+</html>

@@ -1,36 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SKILLFORGE</title>
-
+    <title>SKILLFORGE - Заказы</title>
+    <link rel="stylesheet" href="../static/css/common.css" />
     <link rel="stylesheet" href="../static/css/vacancy.css" />
-    <link rel="stylesheet" href="../static/css/main.css" />
+    <link rel="stylesheet" href="../static/css/create-task.css" />
   </head>
   <body>
     <navbar-component
-      data-title="Основное"
-      data-subtitle="Меню"
+      data-title="Заказы"
+      data-subtitle="Menu"
     ></navbar-component>
 
-    <header class="nav-hero" onmouseenter="fl1()" onmouseleave="fl0()">
+    <header class="hero">
       <time class="time"
         >LOCAL&nbsp;/&nbsp;<span class="time__value">00:00:00</span></time
       >
-      <div class="nav-hero__content">
-        <h1 class="brand">SKILLFORGE</h1>
-        <p class="nav-hero__description">
-          Платформа фриланса с красивым интерфейсом для поиска заказов,
-          портфолио и верификации исполнителей.
-        </p>
-      </div>
+      <h1 class="brand">SKILLFORGE</h1>
     </header>
 
-    <div class="filters">
+    <div class="filters" style="margin-top: var(--space-2xl)">
       <form
         class="filters__form"
-        hx-get="/filters"
+        hx-get="/filters/mytasks"
         hx-trigger="change, keyup delay:400ms"
         hx-target="#filters-output"
       >
@@ -44,17 +38,6 @@
           <span class="filters__header-label">Фильтры</span>
         </div>
         <ul class="filters__list">
-          <!-- пункты фильтра (сокращено для примера) -->
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Программист / Web-разработчик</span
-            ><input
-              type="checkbox"
-              name="professions[]"
-              value="Программист / Web-разработчик"
-              class="filters__item-checkbox"
-            />
-          </li>
           <li class="filters__item">
             <span class="filters__item-label"
               >Программист / Web-разработчик</span
@@ -386,6 +369,12 @@
             <div class="filters__view-line"></div>
           </div>
         </label>
+        <button class="filters__add-btn" type="button" id="openTaskModalBtn">
+          <img
+            class="filters__add-btn__img"
+            src="../static/media/sistem-media/add.png"
+          />
+        </button>
       </div>
     </div>
 
@@ -396,7 +385,7 @@
         hx-get="/task/{{ vacancy.id }}"
         hx-target="body"
         hx-push-url="true"
-        href="view-application.html"
+        href="task-detail.html"
       >
         <div class="vacancy__image-wrap">
           <img
@@ -407,15 +396,16 @@
         <div class="vacancy__body">
           <h3 class="vacancy__title">{{ vacancy.title }}</h3>
           <div class="vacancy__meta">
-            <span class="vacancy__author">{{ vacancy.avtor }}</span
-            ><span class="vacancy__deadline">{{ vacancy.dedline }}</span>
+            <span class="vacancy__author">{{ vacancy.avtor }}</span>
+            <span class="vacancy__deadline">{{ vacancy.dedline }}</span>
           </div>
           <hr class="vacancy__divider" />
           <div class="vacancy__footer">
             <span class="vacancy__cost"
               >до
               <span class="vacancy__cost-value">{{ vacancy.cost }}</span></span
-            ><span class="vacancy__responses">{{ vacancy.otcklick }}</span>
+            >
+            <span class="vacancy__responses">{{ vacancy.otcklick }}</span>
           </div>
         </div>
       </a>
@@ -425,17 +415,228 @@
       </div>
       {% endfor %}
     </main>
-    <footer class="foot-hero" onmouseenter="fl1()" onmouseleave="fl0()">
-      <div class="foot-hero__content">
-        <h1 class="brand">SKILLFORGE</h1>
-        <p class="foot-hero__description">
-          Практикуйся, зарабатывай, наращивай портфолио вместе с нами.
-        </p>
+
+    <div class="modal-overlay" id="createTaskModal">
+      <div class="modal-content">
+        <div class="create-task__container">
+          <div class="modal-header-line">
+            <button
+              type="button"
+              class="create-task__back create-task__back--circle"
+              id="closeTaskModalBtn"
+            >
+              <span class="create-task__back-icon">✕</span>
+            </button>
+          </div>
+
+          <form
+            class="create-task__form"
+            id="taskForm"
+            hx-post="/tasks/create"
+            hx-encoding="multipart/form-data"
+            hx-target="this"
+            hx-swap="outerHTML"
+          >
+            <div class="create-task__media">
+              <label class="create-task__media-add">
+                <input
+                  type="file"
+                  name="photos"
+                  class="create-task__media-input"
+                  accept="image/*"
+                  multiple
+                  id="fileInput"
+                />
+                <div class="create-task__media-add-btn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 5V19M5 12H19"
+                      stroke="#ffffff"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </div>
+              </label>
+              <button
+                type="button"
+                class="create-task__media-delete"
+                id="deleteBtn"
+              >
+                Удалить
+              </button>
+              <div class="create-task__media-slider" id="sliderContainer">
+                <div
+                  class="create-task__media-slide create-task__media-slide--placeholder"
+                >
+                  <img
+                    src="../static/media/sistem-media/Image.png"
+                    alt="Заглушка"
+                    class="create-task__media-img"
+                  />
+                </div>
+              </div>
+              <div
+                class="create-task__media-pagination"
+                id="paginationContainer"
+              >
+                <span
+                  class="create-task__media-dot create-task__media-dot--active"
+                ></span>
+              </div>
+            </div>
+
+            <div class="create-task__group">
+              <input
+                type="text"
+                name="title"
+                class="create-task__input"
+                placeholder="Заголовок задачи"
+                required
+              />
+            </div>
+
+            <div class="create-task__group">
+              <select name="profession" class="create-task__select" required>
+                <option value="" disabled selected>Выберите профессию</option>
+                <option value="Программист / Web-разработчик">
+                  Программист / Web-разработчик
+                </option>
+                <option value="Разработчик веб и мультимедийных приложений">
+                  Разработчик веб и мультимедийных приложений
+                </option>
+                <option value="Специалист по тестированию ПО (QA-инженер)">
+                  Специалист по тестированию ПО (QA-инженер)
+                </option>
+                <option value="Администратор баз данных">
+                  Администратор баз данных
+                </option>
+                <option value="Системный администратор">
+                  Системный администратор
+                </option>
+                <option value="Специалист по информационным системам">
+                  Специалист по информационным системам
+                </option>
+                <option value="Технический писатель">
+                  Технический писатель
+                </option>
+                <option value="Специалист по глобальным компьютерным сетям">
+                  Специалист по глобальным компьютерным сетям
+                </option>
+                <option value="Инженер-строитель">Инженер-строитель</option>
+                <option
+                  value="Инженер по ремонту и обслуживанию автомобильных дорог"
+                >
+                  Инженер по ремонту и обслуживанию автомобильных дорог
+                </option>
+                <option value="Транспортный планировщик">
+                  Транспортный планировщик
+                </option>
+                <option value="Специалист по сметному делу (Инженер-сметчик)">
+                  Специалист по сметному делу (Инженер-сметчик)
+                </option>
+                <option value="Инженер по водоснабжению и водоотведению">
+                  Инженер по водоснабжению и водоотведению
+                </option>
+                <option value="Архитектор-проектировщик">
+                  Архитектор-проектировщик
+                </option>
+                <option value="Ландшафтный архитектор">
+                  Ландшафтный архитектор
+                </option>
+                <option value="Дизайнер садово-паркового искусства">
+                  Дизайнер садово-паркового искусства
+                </option>
+                <option value="Специалист по лесному и лесопарковому хозяйству">
+                  Специалист по лесному и лесопарковому хозяйству
+                </option>
+                <option value="Технолог деревообработки">
+                  Технолог деревообработки
+                </option>
+                <option
+                  value="Промышленный эколог / Специалист по техносферной безопасности"
+                >
+                  Промышленный эколог / Специалист по техносферной безопасности
+                </option>
+                <option
+                  value="Инженер по техническому обслуживанию и ремонту автотранспорта"
+                >
+                  Инженер по техническому обслуживанию и ремонту автотранспорта
+                </option>
+                <option
+                  value="Инженер-технолог деревоперерабатывающих производств"
+                >
+                  Инженер-технолог деревоперерабатывающих производств
+                </option>
+                <option
+                  value="Специалист по энерго- и ресурсосберегающим процессам в химической технологии"
+                >
+                  Специалист по энерго- и ресурсосберегающим процессам в
+                  химической технологии
+                </option>
+                <option value="Специалист по экономической безопасности">
+                  Специалист по экономической безопасности
+                </option>
+                <option
+                  value="Специалист по государственному и муниципальному управлению"
+                >
+                  Специалист по государственному и муниципальному управлению
+                </option>
+                <option
+                  value="Менеджер по недвижимости / Специалист по оценке бизнеса"
+                >
+                  Менеджер по недвижимости / Специалист по оценке бизнеса
+                </option>
+                <option value="Бухгалтер / Экономист">
+                  Бухгалтер / Экономист
+                </option>
+                <option value="Специалист банковского дела">
+                  Специалист банковского дела
+                </option>
+              </select>
+            </div>
+
+            <div class="create-task__row">
+              <div class="create-task__group">
+                <input
+                  type="text"
+                  name="cost"
+                  class="create-task__input"
+                  placeholder="Крайняя цена"
+                  required
+                />
+              </div>
+              <div class="create-task__group">
+                <input
+                  type="text"
+                  name="deadline"
+                  class="create-task__input create-task__input--date"
+                  placeholder="Выберите дату"
+                  required
+                  readonly
+                />
+              </div>
+            </div>
+            <div class="create-task__group">
+              <textarea
+                name="description"
+                class="create-task__textarea"
+                placeholder="Описание задачи"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="create-task__submit">
+              Опубликовать задание
+            </button>
+          </form>
+        </div>
       </div>
-    </footer>
+    </div>
 
     <script src="../static/js/realtime.js"></script>
     <script src="../static/js/shleif_cursor.js"></script>
     <script src="../static/js/nav.js" defer></script>
+    <script src="../static/js/slider.js"></script>
+    <script src="../static/js/calendar.js"></script>
   </body>
 </html>

@@ -1,0 +1,49 @@
+@import url("tokens.css");
+@import url("common.css");
+@import url("profile-common.css");
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  background: var(--bg-main);
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg) var(--space-2xl);
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+.page-header .back-btn {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background var(--transition-default);
+  z-index: 2;
+}
+.page-header .back-btn:hover {
+  background: var(--bg-surface-light);
+}
+.page-header .brand {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 1px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
