@@ -124,7 +124,6 @@
   text-overflow: ellipsis;
 }
 
-/* Основная область чата */
 .chat-main {
   flex: 1;
   display: flex;
@@ -153,7 +152,6 @@
   display: block;
 }
 
-/* Область сообщений */
 .chat-messages {
   flex: 1;
   padding: 30px;
@@ -174,7 +172,6 @@
   background: var(--border-color);
 }
 
-/* Отдельное сообщение */
 .chat-message {
   display: flex;
   max-width: 75%;
@@ -270,4 +267,83 @@
 .chat-input__send:hover {
   background: var(--text-primary);
   color: var(--action-text);
+}
+/* --- Стили модального окна чата --- */
+.chat-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.chat-modal-overlay.active {
+  display: flex;
+}
+
+.chat-modal-content {
+  width: 90vw;
+  height: 90vh;
+  position: relative;
+  background: var(--bg-main);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--text-secondary);
+}
+
+.chat-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10001;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-surface);
+  border: 1px solid var(--text-secondary);
+  border-radius: 50%;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  font-size: 18px;
+  transition: transform 0.5s ease-in-out;
+}
+
+.chat-modal-close:hover {
+  transform: rotate(90deg);
+}
+.chat-modal-close:hover {
+  background: var(--bg-surface-light);
+}
+
+.chat-trigger-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--text-secondary);
+  border-radius: var(--radius-md);
+  position: fixed;
+  z-index: 100;
+  bottom: 20px;
+
+  right: 20px;
+  margin: auto;
+
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+}
+.chat-trigger-btn:hover {
+  background: var(--bg-surface-light);
+}
+.chat-trigger-btn__img {
+  object-fit: cover;
 }
