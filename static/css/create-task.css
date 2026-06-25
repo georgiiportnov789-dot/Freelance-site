@@ -29,10 +29,13 @@
   padding: 10px 16px;
   width: max-content;
   cursor: pointer;
-  transition: background var(--transition-default);
+  transition:
+    background var(--transition-default),
+    transform 0.5s ease-in-out;
 }
 .create-task__back:hover {
   background: var(--bg-surface-light);
+  transform: rotate(90deg);
 }
 .create-task__form {
   display: flex;
