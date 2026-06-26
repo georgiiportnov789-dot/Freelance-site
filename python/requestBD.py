@@ -41,7 +41,12 @@ async def about_table(user_id):
         await db.commit()
 
 
+async def requestBD(zapros):
+    async with aiosqlite.connect("skillforge.db") as db:
+        async with db.execute(zapros) as cursor:
+            tables = await cursor.fetchall()
+            await db.commit()
+            return tables
 
 
 
-asyncio.run(init_db())
