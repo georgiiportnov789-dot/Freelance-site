@@ -1,11 +1,9 @@
-from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
-import os
-import uvicorn
-import random
+from fastapi import FastAPI, Request, Form, Response
+import os, random, uvicorn, uuid
 
+temp = {"id": ["email", "password", "name", "verify-code"]}
 app = FastAPI()
 
 # Путь к корню проекта
@@ -16,11 +14,21 @@ app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), na
 
 # Подключаем шаблоны
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+templates.env.cache = None
 
 
 @app.get("/")
 async def get_login_page(request: Request):
-    return templates.TemplateResponse(request, "index.html")
+    session_id = request.cookies.get("session_id")
+
+    # 2. Если нет, создаем новый
+    response = templates.TemplateResponse(request, "index.html")
+    if not session_id:
+        new_session_id = str(uuid.uuid4())
+        # Отправляем куку браузеру
+        response.set_cookie(key="session_id", value=new_session_id, httponly=True)
+
+    return response
 
 
 @app.get("/login")
@@ -51,22 +59,28 @@ async def get_login_page(request: Request):
 
 @app.get("/my_profile")
 async def get_login_page(request: Request):
-    return templates.TemplateResponse(request, "profile-edit.html")
+    return templates.TemplateResponse(request, "profile-edit.html", )
 
 
-# 2. Маршрут для обработки кнопки (POST)
+@app.get("/verify")
+async def get_login_page(request: Request):
+    return templates.TemplateResponse(request, "verify.html")
+
+
 @app.post("/register")
-async def register(
-        name: str = Form(...),
-        email: str = Form(...),
-        password: str = Form(...)
-):
-    # Этот код сработает ТОЛЬКО когда пользователь нажмет кнопку
-    print(f"Данные получены: {name}, {email}, {password}")
+async def register(request: Request,
+                   name: str = Form(...),
+                   email: str = Form(...),
+                   password: str = Form(...)):
+    session_id = request.cookies.get("session_id")
+    temp[str(session_id)] = {"name": name, "email": email, "password": password,
+                             "verify-code": random.randint(100000, 999999)}
 
-    # Возвращаем ответ для HTMX (он вставится в <div id="register-result">)
-    return HTMLResponse(f"<h3>Привет, {name}! Данные успешно отправлены.</h3>")
+    print(temp)
+    response = Response()
+    response.headers["HX-Redirect"] = "/verify"
+    return response
 
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="127.0.0.1", port=random.randint(49152, 65535), reload=True)
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
