@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3dacfb67-364a-45ab-ae0c-256e02776e59" name="Changes" comment="Добавлено промежуточное ПО для управления кэшированием, обновлены маршруты и шаблоны, изменены кнопки и ссылки на страницах регистрации и подтверждения.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="3dacfb67-364a-45ab-ae0c-256e02776e59" name="Changes" comment="Merge remote-tracking branch 'origin/main'">
       <change beforePath="$PROJECT_DIR$/python/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/create_bd.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/requestBD.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/verify.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/verify.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/requestBD.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/requestBD.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,23 +129,7 @@
       <option name="project" value="LOCAL" />
       <updated>1782481619409</updated>
     </task>
-    <task id="LOCAL-00008" summary="Добавлено промежуточное ПО для управления кэшированием, обновлены маршруты и шаблоны, изменены кнопки и ссылки на страницах регистрации и подтверждения.">
-      <option name="closed" value="true" />
-      <created>1782507428869</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1782507428869</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Добавлено промежуточное ПО для управления кэшированием, обновлены маршруты и шаблоны, изменены кнопки и ссылки на страницах регистрации и подтверждения.">
-      <option name="closed" value="true" />
-      <created>1782507465137</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1782507465137</updated>
-    </task>
-    <option name="localTasksCounter" value="10" />
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,7 +149,6 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Удален и обновлен файл .DS_Store в каталоге media" />
     <MESSAGE value="Merge remote-tracking branch 'origin/main'" />
-    <MESSAGE value="Добавлено промежуточное ПО для управления кэшированием, обновлены маршруты и шаблоны, изменены кнопки и ссылки на страницах регистрации и подтверждения." />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлено промежуточное ПО для управления кэшированием, обновлены маршруты и шаблоны, изменены кнопки и ссылки на страницах регистрации и подтверждения." />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/main'" />
   </component>
 </project>
