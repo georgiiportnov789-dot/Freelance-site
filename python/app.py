@@ -3,7 +3,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Form, Response
 import os, random, uvicorn, uuid, requestBD, asyncio
 
-temp = {"id": ["email", "password", "name", "verify-code"]}
+from python.requestBD import request_bd
+
+temp = {"id": {"email": None, "password": None, "name": None, "verify-code": None}}
 app = FastAPI()
 
 # Путь к корню проекта
@@ -17,7 +19,7 @@ templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 templates.env.cache = None
 
 
-# asyncio.run(requestBD("")) копируешь этот вызов функции внутрь ставишь любой нужный запрос и возвращается ответ
+# await requestBD("") копируешь этот вызов функции внутрь ставишь любой нужный запрос и возвращается ответ
 
 @app.get("/")
 async def get_reg_page(request: Request):
@@ -75,12 +77,19 @@ async def register(request: Request,
                    email: str = Form(...),
                    password: str = Form(...)):
     session_id = request.cookies.get("session_id")
-    verify_code = random.randint(100000, 999999)
-    print(verify_code)
-    temp[str(session_id)] = {"name": name, "email": email, "password": password, "verify-code": str(verify_code)}
-    response = Response()
-    response.headers["HX-Redirect"] = "/verify"
-    return response
+    try:
+        if (await request_bd(f"select email from users where email == '{email}';"))[0][0] == email:
+            return Response("Email уже привязан к аккаунту")
+        else:
+            raise Exception
+    except:
+        verify_code = random.randint(100000, 999999)
+        print(verify_code)
+        temp[str(session_id)] = {"name": name, "email": email, "password": password, "verify-code": str(verify_code)}
+        response = Response()
+        response.headers["HX-Redirect"] = "/verify"
+        return response
+
 
 
 @app.post("/resend-code")
@@ -100,10 +109,20 @@ async def verify(request: Request,
     session_id = request.cookies.get("session_id")
     print(code)
     if temp[str(session_id)]["verify-code"] == code:
+        await request_bd(
+            f"insert into users(id, email, password, fio) "
+            f"values('{str(session_id)}', '{temp[str(session_id)]['email']}', '{temp[str(session_id)]['password']}', '{temp[str(session_id)]['name']}');"
+        )
         response = Response()
         response.headers["HX-Redirect"] = "/main"
         return response
+
     return Response('Не верный код')
+@app.post("/login")
+async def login(request: Request,
+                email: str = Form(...),
+                password: str = Form(...)):
+    session_id = request.cookies.get("session_id")
 
 
 if __name__ == "__main__":

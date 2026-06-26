@@ -7,7 +7,7 @@ async def init_db():
     async with aiosqlite.connect(DB_NAME) as db:
         await db.execute('''
             CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY,
+                id TEXT PRIMARY KEY,
                 email TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 fio TEXT,
@@ -41,12 +41,12 @@ async def about_table(user_id):
         await db.commit()
 
 
-async def requestBD(zapros):
+async def request_bd(zapros):
     async with aiosqlite.connect("skillforge.db") as db:
         async with db.execute(zapros) as cursor:
             tables = await cursor.fetchall()
             await db.commit()
             return tables
 
-
+# asyncio.run(init_db())
 
