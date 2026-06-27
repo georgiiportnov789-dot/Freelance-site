@@ -1,7 +1,8 @@
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Request, Form, Response
-import os, random, uvicorn, uuid, requestBD, asyncio
+import os, random, uvicorn, uuid, requestBD, asyncio, aiosmtplib, re
+from email.message import EmailMessage
 
 from python.requestBD import request_bd
 
@@ -20,7 +21,24 @@ templates.env.cache = None
 
 
 # await requestBD("") копируешь этот вызов функции внутрь ставишь любой нужный запрос и возвращается ответ
+async def send_verification_email(to_email: str, code: str):
+    message = EmailMessage()
+    message["From"] = "georgiiportnov789@gmail.com"
+    message["To"] = to_email
+    message["Subject"] = "Код подтверждения SKILLFORGE"
+    message.set_content(f"Ваш код для активации аккаунта: {code}")
 
+    # Создаем SMTP клиент напрямую
+    smtp = aiosmtplib.SMTP(
+        hostname="smtp.gmail.com",
+        port=587,
+        use_tls=True,
+        username="georgiiportnov789@gmail.com",
+        password="oepr ehlo xpvs fmcd"
+    )
+
+    async with smtp:
+        await smtp.send_message(message)
 @app.get("/")
 async def get_reg_page(request: Request):
     session_id = request.cookies.get("session_id")
@@ -31,6 +49,7 @@ async def get_reg_page(request: Request):
         new_session_id = str(uuid.uuid4())
         # Отправляем куку браузеру
         response.set_cookie(key="session_id", value=new_session_id, httponly=True)
+
 
     return response
 
@@ -77,6 +96,12 @@ async def register(request: Request,
                    email: str = Form(...),
                    password: str = Form(...)):
     session_id = request.cookies.get("session_id")
+    if len(password) < 8:
+        return "Пароль должен быть не короче 8 символов."
+    elif not re.search(r"\d", password):
+        return "Пароль должен содержать хотя бы одну цифру."
+    elif not re.search(r"[A-Z]", password):
+        return "Пароль должен содержать хотя бы одну заглавную букву."
     try:
         if (await request_bd(f"select email from users where email == '{email}';"))[0][0] == email:
             return Response("Email уже привязан к аккаунту")
@@ -89,7 +114,6 @@ async def register(request: Request,
         response = Response()
         response.headers["HX-Redirect"] = "/verify"
         return response
-
 
 
 @app.post("/resend-code")
@@ -117,13 +141,28 @@ async def verify(request: Request,
         response.headers["HX-Redirect"] = "/main"
         return response
 
-    return Response('Не верный код')
+    return 'Не верный код'
+
+
 @app.post("/login")
 async def login(request: Request,
                 email: str = Form(...),
                 password: str = Form(...)):
-    session_id = request.cookies.get("session_id")
+    try:
+        if (await request_bd(f"select email from users where email == '{email}';"))[0][0] == email and \
+                (await request_bd(f"select password from users where password == '{password}';"))[0][0] == password:
+            response = Response()
+            response.headers["HX-Redirect"] = "/main"
+            return response
+        else:
+            raise Exception
+    except:
+        return "Проеверьте почту и пароль."
 
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+
+
+
+# ensm pdel mkom jpcc

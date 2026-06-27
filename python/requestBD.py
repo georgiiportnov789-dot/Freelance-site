@@ -50,4 +50,3 @@ async def request_bd(zapros):
 
 # asyncio.run(init_db())
 
-a
