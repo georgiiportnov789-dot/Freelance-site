@@ -179,6 +179,7 @@
           <div class="profile__achievement">
             <div class="profile__achievement-year">{{ item.year }}</div>
             <div class="profile__achievement-text">{{ item.description }}</div>
+            <button class="profile__delete-btn" onclick="this.closest('.profile__achievement').nextElementSibling?.remove(); this.closest('.profile__achievement').remove();" title="Удалить">✕</button>
           </div>
           <hr class="profile__achievement-divider" />
           {% endfor %}
@@ -405,6 +406,7 @@
                 <div class="profile__achievement">
                   <div class="profile__achievement-year">${year}</div>
                   <div class="profile__achievement-text">${text}</div>
+                  <button class="profile__delete-btn" onclick="this.closest('.profile__achievement').nextElementSibling?.remove(); this.closest('.profile__achievement').remove();" title="Удалить">✕</button>
                 </div>
                 <hr class="profile__achievement-divider" />
               `;
