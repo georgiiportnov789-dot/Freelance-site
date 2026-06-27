@@ -1,10 +1,10 @@
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, Response, RedirectResponse
-from fastapi import FastAPI, Request, Form
-import os, random, uvicorn, uuid, asyncio, aiosmtplib, re
+from fastapi import FastAPI, Request, Form, UploadFile, File
+import os, random, uvicorn, uuid, asyncio, aiosmtplib, re, shutil
 from email.message import EmailMessage
-
+from typing import Optional, List
 from requestBD import request_bd, init_db
 
 app = FastAPI()
@@ -61,7 +61,23 @@ async def get_login_page(request: Request):
 
 @app.get("/main")
 async def get_main_page(request: Request):
-    return templates.TemplateResponse(request, "main.html")
+    vacancies = []
+    try:
+        k = 0
+
+        for i in (await request_bd("select * from jobs ;")):
+            avtor = (await request_bd("select fio from users"))[k][0]
+            vacancies.append({"id": i[0],
+                              "title": i[1],
+                              "avtor": avtor,
+                              "dedline": i[3],
+                              "cost": i[2],
+                              "otcklick": i[7],
+                              })
+            k += 1
+        return templates.TemplateResponse(request, "main.html", {"vacancies": vacancies})
+    except:
+        return templates.TemplateResponse(request, "main.html", )
 
 
 @app.get("/about")
@@ -76,7 +92,21 @@ async def get_appl_page(request: Request):
 
 @app.get("/orders")
 async def get_ord_page(request: Request):
-    return templates.TemplateResponse(request, "orders.html")
+    vacancies = []
+    try:
+        session_id = request.cookies.get("session_id")
+        for i in (await request_bd("select * from jobs where author_id = ?;", (session_id,))):
+            avtor = (await request_bd("select fio from users where id = ?;", (session_id,)))[0][0]
+            vacancies.append({"id": i[0],
+                              "title": i[1],
+                              "avtor": avtor,
+                              "dedline": i[3],
+                              "cost": i[2],
+                              "otcklick": i[7],
+                              })
+        return templates.TemplateResponse(request, "orders.html", {"vacancies": vacancies})
+    except:
+        return templates.TemplateResponse(request, "orders.html", )
 
 
 @app.get("/verify")
@@ -144,10 +174,10 @@ async def get_myp_page(request: Request):
 
 @app.post("/register")
 async def register(
-    request: Request,
-    name: str = Form(...),
-    email: str = Form(...),
-    password: str = Form(...),
+        request: Request,
+        name: str = Form(...),
+        email: str = Form(...),
+        password: str = Form(...),
 ):
     session_id = request.cookies.get("session_id")
 
@@ -219,9 +249,9 @@ async def verify(request: Request, code: str = Form(...)):
 
 @app.post("/login")
 async def login(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...),
+        request: Request,
+        email: str = Form(...),
+        password: str = Form(...),
 ):
     rows = await request_bd(
         "SELECT id FROM users WHERE email = ? AND password = ?",
@@ -240,9 +270,9 @@ async def login(
 
 @app.post("/save-profile")
 async def save_profile(
-    request: Request,
-    name: str = Form(...),
-    university: str = Form(...),
+        request: Request,
+        name: str = Form(...),
+        university: str = Form(...),
 ):
     session_id = request.cookies.get("session_id")
     if not session_id:
@@ -302,9 +332,9 @@ async def add_social(request: Request, social_url: str):
 
 @app.post("/add-achievement")
 async def add_achievement(
-    request: Request,
-    year: int = Form(...),
-    description: str = Form(...),
+        request: Request,
+        year: int = Form(...),
+        description: str = Form(...),
 ):
     session_id = request.cookies.get("session_id")
     if not session_id:
@@ -362,6 +392,104 @@ async def get_user_profile(request: Request, user_id: str):
         print(f"Ошибка загрузки профиля: {e}")
 
     return templates.TemplateResponse(request, "profile-view.html", {"user": user})
+
+
+# ── Создание заявки ──────────────────────────────────────────────────────────────────
+
+@app.post("/tasks/create")
+async def create_task(
+        request: Request,
+        title: str = Form(...),
+        profession: str = Form(...),
+        cost: str = Form(...),
+        deadline: str = Form(...),
+        description: str = Form(...),
+        photos: Optional[List[UploadFile]] = File(None),
+):
+    jobs_id = str(uuid.uuid4())
+    if len(photos) > 0:
+        len_photo = len(photos)
+    else:
+        len_photo = 1
+
+    await request_bd(
+        "INSERT INTO jobs (id, header, salary_min, date, description, author_id, photos, responses_count, profession) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (jobs_id, title, cost, deadline, description, request.cookies.get("session_id"), str(len_photo), 0, profession)
+    )
+    # Папка для сохранения файлов
+    upload_dir = os.path.join(BASE_DIR, "static", "media", "jobs_photo", str(jobs_id))
+    os.makedirs(upload_dir, exist_ok=True)  # создаём, если нет
+
+    saved_files = []
+    if photos and any(p.filename for p in photos):
+        k = 0
+        for photo in photos:
+            if photo.filename:
+                k += 1
+                ext = os.path.splitext(photo.filename)[1] or ".png"
+                filename = f"{k}{ext}"
+                file_path = os.path.join(upload_dir, filename)
+                content = await photo.read()
+                with open(file_path, "wb") as f:
+                    f.write(content)
+                saved_files.append(filename)
+    else:
+        # Нет фото – копируем дефолтное
+        default_source = os.path.join(BASE_DIR, "static", "media", "sistem-media", "Image.png")
+        if os.path.exists(default_source):
+            default_dest = os.path.join(upload_dir, "1.png")
+            shutil.copy2(default_source, default_dest)
+            saved_files.append("1.png")
+        else:
+            # Если даже дефолтного нет – можно оставить заглушку или вывести ошибку
+            print("Дефолтное изображение не найдено!")
+    response = Response()
+    response.headers["Location"] = "/orders"
+    response.status_code = 302
+    return response
+
+
+@app.post("/orders/filters/mytasks")
+async def filter_mytasks(request: Request, salary_from: str = Form(None), salary_to: str = Form(None),
+                         professions: Optional[List[str]] = Form(None, alias="professions[]")):
+    query = """
+            SELECT j.id, j.header, u.fio, j.date, j.salary_min, j.responses_count
+            FROM jobs j
+            LEFT JOIN users u ON j.author_id = u.id
+            WHERE j.author_id = ?
+        """
+    params = [request.cookies.get("session_id")]
+
+    if professions:
+        placeholders = ",".join(["?"] * len(professions))
+        query += f" AND j.profession IN ({placeholders})"
+        params.extend(professions)
+
+    if salary_from is not None:
+        query += " AND j.salary_min >= ?"
+        params.append(salary_from)
+
+    if salary_to is not None:
+        query += " AND j.salary_min <= ?"
+        params.append(salary_to)
+    query += " ORDER BY j.date DESC"
+
+    rows = await request_bd(query, tuple(params))
+    vacancies = []
+    try:
+        session_id = request.cookies.get("session_id")
+        for i in rows:
+            vacancies.append({"id": i[0],
+                              "title": i[1],
+                              "avtor": i[2],
+                              "dedline": i[3],
+                              "cost": i[4],
+                              "otcklick": i[5],
+                              })
+        return templates.TemplateResponse(request, "orders.html", {"vacancies": vacancies, "fragment": True})
+    except:
+        return templates.TemplateResponse(request, "orders.html", )
+
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8045, reload=True)

@@ -21,14 +21,15 @@ async def init_db():
 
         await db.execute('''
             CREATE TABLE IF NOT EXISTS jobs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id TEXT PRIMARY KEY,
                 header TEXT NOT NULL,
-                salary_min INTEGER NOT NULL,
+                salary_min TEXT NOT NULL,
                 date TEXT NOT NULL,
                 description TEXT,
-                author_id INTEGER NOT NULL,
+                author_id TEXT NOT NULL,
                 photos TEXT,
                 responses_count INTEGER DEFAULT 0,
+                profession TEXT,
                 FOREIGN KEY (author_id) REFERENCES users (id)
             )
         ''')
