@@ -231,7 +231,6 @@ async def login(
         user_id = rows[0][0]
         response = Response()
         response.headers["HX-Redirect"] = "/main"
-        # Привязываем куку к ID пользователя из БД
         response.set_cookie(key="session_id", value=user_id, httponly=True)
         return response
     return Response("Проверьте почту и пароль.")
@@ -318,14 +317,92 @@ async def add_achievement(
     return Response("OK")
 
 
-
 async def send_message(request: Request, name: str = "", email: str = "", message: str = ""):
     """Заглушка для формы обратной связи."""
     if not name or not email or not message:
         return Response("Заполните все поля", media_type="text/html")
-    # Здесь можно добавить реальную отправку письма через send_verification_email
     print(f"Сообщение от {name} ({email}): {message}")
     return Response("Сообщение отправлено!", media_type="text/html")
+
+
+# ── Чат ──────────────────────────────────────────────────────────────────────
+
+@app.get("/chat")
+async def get_chat_page(request: Request):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        return RedirectResponse("/login")
+
+    rows = await request_bd(
+        "SELECT id, fio FROM users WHERE id != ?",
+        (session_id,)
+    )
+    users = []
+    for r in rows:
+        fio = r[1] or "Без имени"
+        parts = fio.strip().split()
+        initials = "".join(p[0].upper() for p in parts[:2] if p) or "?"
+        users.append({"id": r[0], "name": fio, "initials": initials})
+
+    return templates.TemplateResponse(request, "chat.html", {"users": users})
+
+
+@app.get("/chat/messages")
+async def load_messages(request: Request, with_user: str):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        return Response("", status_code=403)
+
+    rows = await request_bd(
+        """SELECT sender_id, text, created_at FROM messages
+           WHERE (sender_id = ? AND receiver_id = ?)
+              OR (sender_id = ? AND receiver_id = ?)
+           ORDER BY id ASC""",
+        (session_id, with_user, with_user, session_id)
+    )
+
+    # Получаем имя собеседника
+    name_rows = await request_bd("SELECT fio FROM users WHERE id = ?", (with_user,))
+    other_name = (name_rows[0][0] or "Собеседник") if name_rows else "Собеседник"
+
+    html = ""
+    for r in rows:
+        is_mine = r[0] == session_id
+        cls = "chat-message chat-message--out" if is_mine else "chat-message chat-message--in"
+        sender_label = "Вы" if is_mine else other_name
+        time_str = r[2][11:16] if r[2] else ""
+        html += (
+            f'<div class="{cls}">'
+            f'<span class="chat-message__sender">{sender_label}</span>'
+            f'<div class="chat-message__content">'
+            f'<div class="chat-message__text">{r[1]}</div>'
+            f'<span class="chat-message__time">{time_str}</span>'
+            f'</div>'
+            f'</div>'
+        )
+
+    return Response(html, media_type="text/html")
+
+
+@app.post("/chat/send")
+async def send_chat_message(
+    request: Request,
+    receiver_id: str = Form(...),
+    text: str = Form(...),
+):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        return Response("", status_code=403)
+
+    text = text.strip()
+    if not text:
+        return Response("", media_type="text/html")
+
+    await request_bd(
+        "INSERT INTO messages (sender_id, receiver_id, text) VALUES (?, ?, ?)",
+        (session_id, receiver_id, text)
+    )
+    return Response("", media_type="text/html")
 
 
 if __name__ == "__main__":

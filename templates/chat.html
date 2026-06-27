@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillForge — Чат</title>
+  <link rel="stylesheet" href="../static/css/chat.css">
+</head>
+<body>
+
+  <div class="chat-app">
+
+    <!-- Сайдбар -->
+    <aside class="chat-sidebar">
+      <div class="chat-sidebar__header">
+        <input type="text" class="chat-sidebar__search"
+               placeholder="Поиск..."
+               oninput="filterUsers(this.value)">
+      </div>
+
+      <div class="chat-sidebar__list" id="user-list">
+        {% for u in users %}
+        <div class="chat-sidebar__item"
+             data-name="{{ u.name|lower }}"
+             data-id="{{ u.id }}"
+             onclick="openChat('{{ u.id }}', '{{ u.name }}', this)">
+          <div class="chat-avatar">{{ u.initials }}</div>
+          <div class="chat-item__info">
+            <div class="chat-item__header">
+              <span class="chat-item__name">{{ u.name }}</span>
+            </div>
+            <div class="chat-item__preview">Нажми, чтобы открыть</div>
+          </div>
+        </div>
+        {% endfor %}
+
+        {% if not users %}
+        <div style="padding:24px;text-align:center;color:#555;font-size:14px;">
+          Других пользователей пока нет
+        </div>
+        {% endif %}
+      </div>
+    </aside>
+
+    <!-- Основная область -->
+    <main class="chat-main">
+      <div class="chat-main__header">
+        <div>
+          <div class="chat-main__title" id="chat-header">Выберите собеседника</div>
+          <span class="chat-main__status" id="chat-status"></span>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="messages-box">
+        <div style="text-align:center;margin:auto;color:#555;font-size:14px;">
+          Выберите чат слева, чтобы начать переписку
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <input type="hidden" id="receiver-id" value="">
+        <input type="text" id="msg-text" class="chat-input__field"
+               placeholder="Написать сообщение..." autocomplete="off">
+        <button class="chat-input__send" id="send-btn" onclick="sendMessage()" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </main>
+
+  </div>
+
+  <script>
+    let currentReceiver = null;
+    let pollTimer = null;
+
+    function openChat(userId, userName, el) {
+      document.querySelectorAll(".chat-sidebar__item").forEach(i => i.classList.remove("active"));
+      el.classList.add("active");
+
+      currentReceiver = userId;
+      document.getElementById("receiver-id").value = userId;
+      document.getElementById("chat-header").textContent = userName;
+      document.getElementById("chat-status").textContent = "в сети";
+      document.getElementById("send-btn").disabled = false;
+
+      loadMessages(true);
+
+      clearInterval(pollTimer);
+      pollTimer = setInterval(() => loadMessages(false), 2000);
+    }
+
+    async function loadMessages(scrollToBottom) {
+      if (!currentReceiver) return;
+      try {
+        const res = await fetch(`/chat/messages?with_user=${currentReceiver}`);
+        const html = await res.text();
+        const box = document.getElementById("messages-box");
+        const wasAtBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+        box.innerHTML = html || '<div style="text-align:center;margin:auto;color:#555;font-size:14px;">Сообщений пока нет — напишите первым!</div>';
+        if (scrollToBottom || wasAtBottom) {
+          box.scrollTop = box.scrollHeight;
+        }
+      } catch (e) { /* тихо */ }
+    }
+
+    async function sendMessage() {
+      const textEl = document.getElementById("msg-text");
+      const text = textEl.value.trim();
+      if (!text || !currentReceiver) return;
+
+      textEl.value = "";
+      const form = new FormData();
+      form.append("receiver_id", currentReceiver);
+      form.append("text", text);
+
+      await fetch("/chat/send", { method: "POST", body: form });
+      loadMessages(true);
+    }
+
+    function filterUsers(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll(".chat-sidebar__item").forEach(el => {
+        el.style.display = el.dataset.name.includes(q) ? "" : "none";
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("msg-text").addEventListener("keydown", e => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

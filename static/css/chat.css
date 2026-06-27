@@ -177,6 +177,19 @@
   max-width: 75%;
 }
 
+.chat-message {
+  flex-direction: column;
+}
+
+.chat-message__sender {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  padding: 0 4px;
+}
+
 .chat-message__content {
   display: inline-block;
   padding: 12px 16px;
@@ -202,6 +215,10 @@
 /* Входящие сообщения (слева) */
 .chat-message--in {
   align-self: flex-start;
+  align-items: flex-start;
+}
+.chat-message--in .chat-message__sender {
+  color: #888;
 }
 .chat-message--in .chat-message__content {
   border-left: 2px solid var(--text-primary);
@@ -213,6 +230,10 @@
 /* Исходящие сообщения (справа) */
 .chat-message--out {
   align-self: flex-end;
+  align-items: flex-end;
+}
+.chat-message--out .chat-message__sender {
+  color: var(--text-primary);
 }
 .chat-message--out .chat-message__content {
   border-right: 2px solid var(--text-primary);

@@ -53,6 +53,18 @@ async def init_db():
             )
         ''')
 
+        await db.execute('''
+            CREATE TABLE IF NOT EXISTS messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                sender_id TEXT NOT NULL,
+                receiver_id TEXT NOT NULL,
+                text TEXT NOT NULL,
+                created_at TEXT DEFAULT (datetime('now','localtime')),
+                FOREIGN KEY (sender_id) REFERENCES users (id),
+                FOREIGN KEY (receiver_id) REFERENCES users (id)
+            )
+        ''')
+
         await db.commit()
 
 
