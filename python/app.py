@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, Form
 import os, random, uvicorn, uuid, asyncio, aiosmtplib, re
 from email.message import EmailMessage
 
-from python.requestBD import request_bd, init_db
+from requestBD import request_bd, init_db
 
 app = FastAPI()
 
@@ -364,4 +364,4 @@ async def get_user_profile(request: Request, user_id: str):
     return templates.TemplateResponse(request, "profile-view.html", {"user": user})
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("app:app", host="127.0.0.1", port=8045, reload=True)
