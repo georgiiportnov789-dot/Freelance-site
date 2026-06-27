@@ -172,6 +172,7 @@
       <section class="profile__about">
         <div class="profile__about-sidebar">
           <h3 class="profile__about-title">Обо мне</h3>
+          <button class="profile__add-btn" id="add-achievement-btn" title="Добавить достижение">+</button>
         </div>
         <div class="profile__about-list">
           {% for item in user.achievements %}
@@ -225,6 +226,7 @@
       </div>
     </div>
 
+    <!-- Модалка редактирования профиля -->
     <div id="edit-profile-modal" class="modal">
       <div class="modal__content">
         <div class="modal__header">
@@ -233,37 +235,30 @@
             &times;
           </button>
         </div>
-        <form
-          hx-get="/edit-profile"
-          hx-target="#profile-main-container"
-          hx-swap="outerHTML"
-          hx-on::after-request="document.getElementById('edit-profile-modal').classList.remove('active');"
-          class="modal__form-stacked"
-        >
+        <div class="modal__form-stacked">
           <input
             type="text"
-            name="name"
+            id="edit-name"
             class="modal__input"
             placeholder="Имя"
             value="{{ user.name }}"
-            required
           />
           <input
             type="text"
-            name="university"
+            id="edit-university"
             class="modal__input"
             placeholder="Университет"
             value="{{ user.university }}"
-            required
           />
           <button
-            type="submit"
+            id="save-profile-btn"
             class="profile__submit"
             style="margin-top: var(--space-sm)"
           >
             Сохранить изменения
           </button>
-        </form>
+          <div id="edit-profile-result" style="color: var(--text-secondary); font-size: var(--font-size-base);"></div>
+        </div>
       </div>
     </div>
 
@@ -304,11 +299,129 @@
         </form>
       </div>
     </div>
+    <!-- Модалка добавления достижения -->
+    <div id="achievement-modal" class="modal">
+      <div class="modal__content">
+        <div class="modal__header">
+          <h3 class="modal__title">Новое достижение</h3>
+          <button id="close-achievement-modal" class="modal__close">&times;</button>
+        </div>
+        <div class="modal__form-stacked">
+          <input
+            type="number"
+            id="achievement-year"
+            class="modal__input"
+            placeholder="Год (например, 2024)"
+            min="1900"
+            max="2099"
+          />
+          <textarea
+            id="achievement-text"
+            class="modal__input"
+            placeholder="Описание достижения"
+            rows="3"
+            style="resize: vertical;"
+          ></textarea>
+          <button id="save-achievement-btn" class="profile__submit" style="margin-top: var(--space-sm)">
+            Добавить
+          </button>
+          <div id="achievement-result" style="color: var(--text-secondary); font-size: var(--font-size-base);"></div>
+        </div>
+      </div>
+    </div>
+
     <chat-component></chat-component>
 
     <script src="../static/js/chat.js" defer></script>
     <script src="../static/js/realtime.js"></script>
     <script src="../static/js/my_profile.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const saveBtn = document.getElementById('save-profile-btn');
+        if (saveBtn) {
+          saveBtn.addEventListener('click', async () => {
+            const name = document.getElementById('edit-name').value.trim();
+            const university = document.getElementById('edit-university').value.trim();
+            const result = document.getElementById('edit-profile-result');
+            if (!name || !university) {
+              result.textContent = 'Заполните все поля';
+              return;
+            }
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('university', university);
+            try {
+              const resp = await fetch('/save-profile', {
+                method: 'POST',
+                body: formData,
+              });
+              if (resp.ok) {
+                window.location.href = '/my_profile';
+              } else {
+                const text = await resp.text();
+                result.textContent = 'Ошибка: ' + text;
+              }
+            } catch (e) {
+              result.textContent = 'Ошибка соединения';
+            }
+          });
+        }
+      });
+    </script>
+    <script>
+      // Модалка достижений
+      document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('achievement-modal');
+        document.getElementById('add-achievement-btn').addEventListener('click', () => {
+          modal.classList.add('active');
+        });
+        document.getElementById('close-achievement-modal').addEventListener('click', () => {
+          modal.classList.remove('active');
+        });
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) modal.classList.remove('active');
+        });
+
+        document.getElementById('save-achievement-btn').addEventListener('click', async () => {
+          const year = document.getElementById('achievement-year').value.trim();
+          const text = document.getElementById('achievement-text').value.trim();
+          const result = document.getElementById('achievement-result');
+
+          if (!year || !text) {
+            result.textContent = 'Заполните все поля';
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append('year', year);
+          formData.append('description', text);
+
+          try {
+            const resp = await fetch('/add-achievement', { method: 'POST', body: formData });
+            if (resp.ok) {
+              const list = document.querySelector('.profile__about-list');
+              const div = document.createElement('div');
+              div.innerHTML = `
+                <div class="profile__achievement">
+                  <div class="profile__achievement-year">${year}</div>
+                  <div class="profile__achievement-text">${text}</div>
+                </div>
+                <hr class="profile__achievement-divider" />
+              `;
+              list.appendChild(div);
+              modal.classList.remove('active');
+              document.getElementById('achievement-year').value = '';
+              document.getElementById('achievement-text').value = '';
+              result.textContent = '';
+            } else {
+              result.textContent = 'Ошибка при сохранении';
+            }
+          } catch (e) {
+            result.textContent = 'Ошибка соединения';
+          }
+        });
+      });
+    </script>
     <script src="../static/js/nav.js" defer></script>
   </body>
 </html>
