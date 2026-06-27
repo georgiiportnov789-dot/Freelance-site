@@ -6,6 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="3dacfb67-364a-45ab-ae0c-256e02776e59" name="Changes" comment="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;python/app.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/static/css/profile-edit.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/profile-edit.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/profile-edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/profile-edit.html" afterDir="false" />
+=======
+>>>>>>> 17d8c0f653192470d008a1c524b3913853a11e20
+>>>>>>> c9d550e7cc18eac1e43b7507c1de6aac693390d0
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,21 +61,21 @@
     <decayedCancelled>
       <entry key="MS100" value="1.0" />
       <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.000000000939492" />
-      <entry key="S10" value="1.0000306511348644" />
-      <entry key="S30" value="1.031366098347955" />
-      <entry key="S60" value="1.1853064391555097" />
-      <entry key="M2" value="1.5122584148061406" />
-      <entry key="M5" value="2.0916833752310904" />
-      <entry key="M10" value="2.461017018238942" />
-      <entry key="M15" value="2.6180889130990863" />
-      <entry key="M30" value="2.796626340369694" />
-      <entry key="H1" value="2.894977063519041" />
-      <entry key="H2" value="2.9466235656386557" />
-      <entry key="H4" value="2.9730915418683055" />
-      <entry key="D1" value="2.995484322174187" />
-      <entry key="W1" value="2.9993541410284967" />
+      <entry key="S2" value="1.0000000000227711" />
+      <entry key="S5" value="1.000083817963703" />
+      <entry key="S10" value="1.0129464608438785" />
+      <entry key="S30" value="1.3785480717704794" />
+      <entry key="S60" value="1.9432142212614907" />
+      <entry key="M2" value="2.650270789110693" />
+      <entry key="M5" value="3.613137946295969" />
+      <entry key="M10" value="4.181857207414874" />
+      <entry key="M15" value="4.420809662514445" />
+      <entry key="M30" value="4.691661324994879" />
+      <entry key="H1" value="4.840755726537314" />
+      <entry key="H2" value="4.919056651678809" />
+      <entry key="H4" value="4.959191206144025" />
+      <entry key="D1" value="4.993151121208809" />
+      <entry key="W1" value="4.99902041981478" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -89,23 +97,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="4.9962633350056E-16" />
-      <entry key="MS500" value="8.704204061493862E-4" />
-      <entry key="S2" value="0.17176404774703383" />
-      <entry key="S5" value="0.49427985077022146" />
-      <entry key="S10" value="0.7030736816330744" />
-      <entry key="S30" value="0.9178179554251056" />
-      <entry key="S60" value="1.120180165646329" />
-      <entry key="M2" value="1.4728050813855507" />
-      <entry key="M5" value="2.0718721344825" />
-      <entry key="M10" value="2.4499560799823707" />
-      <entry key="M15" value="2.610399186778843" />
-      <entry key="M30" value="2.7926052898670624" />
-      <entry key="H1" value="2.892918654277195" />
-      <entry key="H2" value="2.945581871131793" />
-      <entry key="H4" value="2.9725675046533553" />
-      <entry key="D1" value="2.9953965337330875" />
-      <entry key="W1" value="2.999341588751809" />
+      <entry key="MS100" value="0.8645372313078652" />
+      <entry key="MS500" value="0.9713074955416333" />
+      <entry key="S2" value="0.9927483754527557" />
+      <entry key="S5" value="0.9971539596087295" />
+      <entry key="S10" value="1.009421819103642" />
+      <entry key="S30" value="1.3553298848908255" />
+      <entry key="S60" value="1.912989563246368" />
+      <entry key="M2" value="2.6227874254969628" />
+      <entry key="M5" value="3.595593631070609" />
+      <entry key="M10" value="4.1712544216619305" />
+      <entry key="M15" value="4.413241829992903" />
+      <entry key="M30" value="4.6875985993111495" />
+      <entry key="H1" value="4.838648490187763" />
+      <entry key="H2" value="4.917983224664079" />
+      <entry key="H4" value="4.958649430702319" />
+      <entry key="D1" value="4.993060112716401" />
+      <entry key="W1" value="4.999007401024565" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -226,8 +234,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.app" />
-        <item itemvalue="Python.requestBD" />
         <item itemvalue="Python.test" />
+        <item itemvalue="Python.requestBD" />
       </list>
     </recent_temporary>
   </component>
@@ -247,6 +255,7 @@
       <updated>1782423729469</updated>
       <workItem from="1782533942119" duration="321000" />
       <workItem from="1782534275817" duration="12640000" />
+      <workItem from="1782556436930" duration="1685000" />
     </task>
     <task id="LOCAL-00001" summary="Удален и обновлен файл .DS_Store в каталоге media">
       <option name="closed" value="true" />
@@ -360,8 +369,8 @@
     <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;python/app.py" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Freelance_site$test.coverage" NAME="test Coverage Results" MODIFIED="1782551252457" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python" />
     <SUITE FILE_PATH="coverage/Freelance_site$requestBD.coverage" NAME="requestBD Coverage Results" MODIFIED="1782553691959" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python" />
-    <SUITE FILE_PATH="coverage/Freelance_site$app.coverage" NAME="app Coverage Results" MODIFIED="1782553944299" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python" />
+    <SUITE FILE_PATH="coverage/Freelance_site$test.coverage" NAME="test Coverage Results" MODIFIED="1782559964510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python" />
+    <SUITE FILE_PATH="coverage/Freelance_site$app.coverage" NAME="app Coverage Results" MODIFIED="1782559988267" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/python" />
   </component>
 </project>
