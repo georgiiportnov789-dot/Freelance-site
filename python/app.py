@@ -404,6 +404,43 @@ async def send_chat_message(
     )
     return Response("", media_type="text/html")
 
+@app.get("/profile/{user_id}")
+async def get_user_profile(request: Request, user_id: str):
+    user = {
+        "name": "", "email": "", "university": "",
+        "phone": "", "initials": "?", "socials": [], "achievements": [],
+    }
+    try:
+        rows = await request_bd(
+            "SELECT fio, email, university, number FROM users WHERE id = ?",
+            (user_id,)
+        )
+        if rows:
+            fio = rows[0][0] or ""
+            parts = fio.strip().split()
+            initials = "".join(p[0].upper() for p in parts[:2] if p) or "?"
+
+            ach_rows = await request_bd(
+                "SELECT year, description FROM achievements WHERE user_id = ? ORDER BY year DESC",
+                (user_id,)
+            )
+            soc_rows = await request_bd(
+                "SELECT url, name FROM socials WHERE user_id = ?",
+                (user_id,)
+            )
+            user = {
+                "name": fio,
+                "email": rows[0][1] or "",
+                "university": rows[0][2] or "",
+                "phone": rows[0][3] or "",
+                "initials": initials,
+                "socials": [{"url": r[0], "name": r[1]} for r in soc_rows],
+                "achievements": [{"year": r[0], "description": r[1]} for r in ach_rows],
+            }
+    except Exception as e:
+        print(f"Ошибка загрузки профиля: {e}")
+
+    return templates.TemplateResponse(request, "profile-view.html", {"user": user})
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
