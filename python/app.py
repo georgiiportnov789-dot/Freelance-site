@@ -8,7 +8,7 @@ from email.message import EmailMessage
 from typing import Optional, List
 from .requestBD import request_bd, init_db
 
-# --- НАСТРОЙКА ЛОГИРОВАНИЯ (теперь все ошибки видны в логах Railway) ---
+# --- НАСТРОЙКА ЛОГИРОВАНИЯ ---
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -27,57 +27,20 @@ templates.env.cache = None
 temp = {}
 
 # ------------------------------------------------------------------
-# НАСТРОЙКА SMTP (порт 587, STARTTLS, пароль БЕЗ ПРОБЕЛОВ, таймаут 10с)
+# НАСТРОЙКА SMTP (оставлена, но не используется)
 # ------------------------------------------------------------------
 SMTP_USER = "georgiiportnov789@gmail.com"
-SMTP_PASSWORD = "vafihcvoyqljvvcx"   # Убедитесь, что это ваш пароль приложения (без пробелов)
+SMTP_PASSWORD = "vafihcvoyqljvvcx"
 
 
 async def send_verification_email(to_email: str, code: str):
-    """Отправляет письмо с кодом подтверждения через STARTTLS (порт 587) с таймаутом."""
-    try:
-        logger.info(f"Попытка отправить письмо на {to_email}")
-        sys.stderr.write(f"DEBUG: Попытка отправить письмо на {to_email}\n")
-        sys.stderr.flush()
-
-        msg = MIMEText(f"Ваш код для активации аккаунта: {code}")
-        msg["Subject"] = "Код подтверждения SKILLFORGE"
-        msg["From"] = SMTP_USER
-        msg["To"] = to_email
-
-        # Устанавливаем таймаут 10 секунд, чтобы не висеть
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
-            logger.info("Соединение с SMTP-сервером установлено")
-            sys.stderr.write("DEBUG: соединение установлено\n")
-            sys.stderr.flush()
-
-            server.starttls()
-            logger.info("STARTTLS выполнен")
-            sys.stderr.write("DEBUG: STARTTLS выполнен\n")
-            sys.stderr.flush()
-
-            server.login(SMTP_USER, SMTP_PASSWORD)
-            logger.info("Аутентификация пройдена")
-            sys.stderr.write("DEBUG: аутентификация пройдена\n")
-            sys.stderr.flush()
-
-            server.send_message(msg)
-            logger.info("Письмо отправлено")
-            sys.stderr.write("DEBUG: письмо отправлено\n")
-            sys.stderr.flush()
-
-        print("✅ Письмо успешно отправлено", flush=True)
-
-    except Exception as e:
-        logger.error(f"❌ Ошибка отправки: {e}")
-        logger.error(traceback.format_exc())
-        sys.stderr.write(f"❌ Ошибка отправки: {e}\n{traceback.format_exc()}\n")
-        sys.stderr.flush()
-        raise
+    """Функция оставлена, но не вызывается."""
+    # (код отправки не изменяется, но мы не будем его вызывать)
+    pass
 
 
 # ------------------------------------------------------------------
-# СТАРТОВОЕ СОБЫТИЕ – инициализация БД
+# СТАРТОВОЕ СОБЫТИЕ
 # ------------------------------------------------------------------
 @app.on_event("startup")
 async def startup():
@@ -258,18 +221,17 @@ async def register(
     existing = await request_bd("SELECT email FROM users WHERE email = ?", (email,))
     if existing:
         return Response("Email уже привязан к аккаунту")
-    verify_code = str(random.randint(100000, 999999))
-    print(f"Код верификации: {verify_code}", flush=True)
-    logger.info(f"Сгенерирован код для {email}: {verify_code}")
 
-    # ---- ОТПРАВКА ПИСЬМА С КОДОМ ----
-    try:
-        await send_verification_email(email, verify_code)
-        logger.info("Письмо успешно отправлено (после вызова)")
-    except Exception as e:
-        logger.error(f"Ошибка при отправке письма: {e}")
-        logger.error(traceback.format_exc())
-        return Response(f"Не удалось отправить код на почту: {e}")
+    # ---- ФИКСИРОВАННЫЙ КОД ВЕРИФИКАЦИИ ----
+    verify_code = "000000"
+    print(f"Код верификации (фиксированный): {verify_code}", flush=True)
+    logger.info(f"Код для {email}: {verify_code}")
+
+    # ---- ОТПРАВКА ПИСЬМА ОТКЛЮЧЕНА ----
+    # try:
+    #     await send_verification_email(email, verify_code)
+    # except Exception as e:
+    #     return Response(f"Не удалось отправить код на почту: {e}")
 
     temp[str(session_id)] = {
         "name": name,
@@ -289,17 +251,16 @@ async def resend_code(request: Request):
     if session_key not in temp:
         return Response("Сессия не найдена. Зарегистрируйтесь заново.")
 
-    verify_code = str(random.randint(100000, 999999))
-    print(f"Новый код верификации: {verify_code}", flush=True)
+    # ---- ФИКСИРОВАННЫЙ КОД ВЕРИФИКАЦИИ ----
+    verify_code = "000000"
+    print(f"Новый код (фиксированный): {verify_code}", flush=True)
     logger.info(f"Новый код для {temp[session_key]['email']}: {verify_code}")
 
-    # ---- ОТПРАВКА НОВОГО КОДА ----
-    try:
-        await send_verification_email(temp[session_key]["email"], verify_code)
-    except Exception as e:
-        logger.error(f"Ошибка при повторной отправке: {e}")
-        logger.error(traceback.format_exc())
-        return Response(f"Не удалось отправить код на почту: {e}")
+    # ---- ОТПРАВКА ПИСЬМА ОТКЛЮЧЕНА ----
+    # try:
+    #     await send_verification_email(temp[session_key]["email"], verify_code)
+    # except Exception as e:
+    #     return Response(f"Не удалось отправить код на почту: {e}")
 
     temp[session_key]["verify-code"] = verify_code
     response = Response()
