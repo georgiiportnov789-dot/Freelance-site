@@ -19,20 +19,21 @@ templates.env.cache = None
 temp = {}
 
 # ------------------------------------------------------------------
-# НАСТРОЙКА SMTP
+# НАСТРОЙКА SMTP (исправлено: порт 587 + STARTTLS)
 # ------------------------------------------------------------------
 SMTP_USER = "georgiiportnov789@gmail.com"
-SMTP_PASSWORD = "qqml asmb ghmv nwtp"  # УБЕДИТЕСЬ, ЧТО БЕЗ ПРОБЕЛОВ
+SMTP_PASSWORD = "vafihcvoyqljvvcx"  # ЗАМЕНИТЕ НА ВАШ ПАРОЛЬ ПРИЛОЖЕНИЯ, ЕСЛИ НУЖНО
 
 
 async def send_verification_email(to_email: str, code: str):
-    """Отправляет письмо с кодом подтверждения через smtplib (SSL, порт 465)."""
+    """Отправляет письмо с кодом подтверждения через STARTTLS (порт 587)."""
     msg = MIMEText(f"Ваш код для активации аккаунта: {code}")
     msg["Subject"] = "Код подтверждения SKILLFORGE"
     msg["From"] = SMTP_USER
     msg["To"] = to_email
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()                     # Включаем шифрование
             server.login(SMTP_USER, SMTP_PASSWORD)
             server.send_message(msg)
         print("✅ Письмо успешно отправлено")
@@ -42,7 +43,7 @@ async def send_verification_email(to_email: str, code: str):
 
 
 # ------------------------------------------------------------------
-# СТАРТОВОЕ СОБЫТИЕ – инициализация БД (без тестовой отправки)
+# СТАРТОВОЕ СОБЫТИЕ – инициализация БД
 # ------------------------------------------------------------------
 @app.on_event("startup")
 async def startup():
@@ -50,7 +51,7 @@ async def startup():
 
 
 # ------------------------------------------------------------------
-# ВСЕ ОБРАБОТЧИКИ
+# ВСЕ ОБРАБОТЧИКИ (без изменений)
 # ------------------------------------------------------------------
 @app.get("/")
 async def get_reg_page(request: Request):
@@ -424,7 +425,7 @@ async def get_user_profile(request: Request, user_id: str):
     return templates.TemplateResponse(request, "profile-view.html", {"user": user})
 
 
-# --------------------------- ИСПРАВЛЕННАЯ ФУНКЦИЯ СОЗДАНИЯ ЗАДАЧИ ---------------------------
+# --------------------------- СОЗДАНИЕ ЗАДАЧИ ---------------------------
 @app.post("/tasks/create")
 async def create_task(
         request: Request,
@@ -449,7 +450,6 @@ async def create_task(
         for photo in photos:
             if photo.filename:
                 k += 1
-                # --- ИСПРАВЛЕНИЕ: всегда сохраняем как .png ---
                 ext = ".png"
                 filename = f"{k}{ext}"
                 file_path = os.path.join(upload_dir, filename)
@@ -470,8 +470,7 @@ async def create_task(
     return response
 
 
-# --------------------------------------------------------------------------------------------
-
+# --------------------------- ФИЛЬТРЫ ---------------------------
 @app.post("/filters/mytasks")
 async def filter_mytasks(request: Request, salary_from: str = Form(None), salary_to: str = Form(None),
                          professions: Optional[List[str]] = Form(None, alias="professions[]")):
