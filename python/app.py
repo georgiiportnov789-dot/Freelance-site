@@ -6,7 +6,7 @@ import os, random, uvicorn, uuid, asyncio, re, shutil, json, smtplib
 from email.mime.text import MIMEText
 from email.message import EmailMessage
 from typing import Optional, List
-from requestBD import request_bd, init_db
+from .requestBD import request_bd, init_db
 
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
