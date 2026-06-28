@@ -22,7 +22,7 @@ temp = {}
 # НАСТРОЙКА SMTP (исправлено: порт 587 + STARTTLS)
 # ------------------------------------------------------------------
 SMTP_USER = "georgiiportnov789@gmail.com"
-SMTP_PASSWORD = "vafihcvoyqljvvcx"  # ЗАМЕНИТЕ НА ВАШ ПАРОЛЬ ПРИЛОЖЕНИЯ, ЕСЛИ НУЖНО
+SMTP_PASSWORD = "vafi hcvo yqlj vvcx"  # ЗАМЕНИТЕ НА ВАШ ПАРОЛЬ ПРИЛОЖЕНИЯ, ЕСЛИ НУЖНО
 
 
 async def send_verification_email(to_email: str, code: str):
