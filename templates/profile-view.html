@@ -35,29 +35,15 @@
             <p class="profile__subtitle">
               Свяжитесь со мной, и давайте вместе создадим что-то потрясающее
             </p>
-            <form action="/send-message" method="POST" class="profile__form">
-              <input
-                type="text"
-                name="name"
-                class="profile__input"
-                placeholder="Имя"
-                required
-              />
-              <input
-                type="email"
-                name="email"
-                class="profile__input"
-                placeholder="Почта"
-                required
-              />
+            <div class="profile__form" data-owner-id="{{ user.id }}">
               <textarea
-                name="message"
+                id="contact-message"
                 class="profile__textarea"
                 placeholder="Сообщение"
-                required
               ></textarea>
-              <button type="submit" class="profile__submit">Написать</button>
-            </form>
+              <button type="button" id="send-contact-btn" class="profile__submit">Написать</button>
+              <div id="message-result" style="color: var(--text-secondary); font-size: var(--font-size-base);"></div>
+            </div>
           </div>
           <div class="profile__avatar-zone">
             <div class="profile__avatar">
@@ -114,5 +100,51 @@
       </main>
     </div>
     <script src="../static/js/realtime.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const sendBtn = document.getElementById('send-contact-btn');
+        if (!sendBtn) return;
+        sendBtn.addEventListener('click', async () => {
+          const form = sendBtn.closest('.profile__form');
+          const ownerIdRaw = form ? form.dataset.ownerId : '';
+          const ownerId = ownerIdRaw && ownerIdRaw !== 'None' ? ownerIdRaw.trim() : '';
+          const textarea = document.getElementById('contact-message');
+          const result = document.getElementById('message-result');
+          const text = textarea ? textarea.value.trim() : '';
+          if (!text) {
+            result.style.color = 'var(--text-secondary)';
+            result.textContent = 'Введите сообщение';
+            return;
+          }
+          if (!ownerId) {
+            result.style.color = '#e05555';
+            result.textContent = 'Не удалось определить получателя';
+            return;
+          }
+          try {
+            const resp = await fetch('/send-message', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ receiver_id: ownerId, text }),
+            });
+            if (resp.ok) {
+              textarea.value = '';
+              result.style.color = 'var(--text-secondary)';
+              result.textContent = 'Сообщение отправлено ✓';
+              setTimeout(() => { result.textContent = ''; }, 3000);
+            } else if (resp.status === 401) {
+              result.style.color = '#e05555';
+              result.textContent = 'Войдите в аккаунт, чтобы отправить сообщение';
+            } else {
+              result.style.color = '#e05555';
+              result.textContent = 'Ошибка при отправке';
+            }
+          } catch (e) {
+            result.style.color = '#e05555';
+            result.textContent = 'Ошибка соединения';
+          }
+        });
+      });
+    </script>
   </body>
 </html>

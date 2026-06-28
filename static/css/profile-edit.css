@@ -169,6 +169,12 @@
   opacity: 0.85;
 }
 
+.profile__social-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .profile__delete-btn {
   background: none;
   border: none;
