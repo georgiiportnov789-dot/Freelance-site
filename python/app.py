@@ -27,29 +27,47 @@ templates.env.cache = None
 temp = {}
 
 # ------------------------------------------------------------------
-# НАСТРОЙКА SMTP (порт 587, STARTTLS, пароль БЕЗ ПРОБЕЛОВ)
+# НАСТРОЙКА SMTP (порт 587, STARTTLS, пароль БЕЗ ПРОБЕЛОВ, таймаут 10с)
 # ------------------------------------------------------------------
 SMTP_USER = "georgiiportnov789@gmail.com"
 SMTP_PASSWORD = "vafihcvoyqljvvcx"   # Убедитесь, что это ваш пароль приложения (без пробелов)
 
 
 async def send_verification_email(to_email: str, code: str):
-    """Отправляет письмо с кодом подтверждения через STARTTLS (порт 587)."""
-    logger.info(f"Попытка отправить письмо на {to_email}")
-    msg = MIMEText(f"Ваш код для активации аккаунта: {code}")
-    msg["Subject"] = "Код подтверждения SKILLFORGE"
-    msg["From"] = SMTP_USER
-    msg["To"] = to_email
+    """Отправляет письмо с кодом подтверждения через STARTTLS (порт 587) с таймаутом."""
     try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        logger.info(f"Попытка отправить письмо на {to_email}")
+        sys.stderr.write(f"DEBUG: Попытка отправить письмо на {to_email}\n")
+        sys.stderr.flush()
+
+        msg = MIMEText(f"Ваш код для активации аккаунта: {code}")
+        msg["Subject"] = "Код подтверждения SKILLFORGE"
+        msg["From"] = SMTP_USER
+        msg["To"] = to_email
+
+        # Устанавливаем таймаут 10 секунд, чтобы не висеть
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
             logger.info("Соединение с SMTP-сервером установлено")
+            sys.stderr.write("DEBUG: соединение установлено\n")
+            sys.stderr.flush()
+
             server.starttls()
             logger.info("STARTTLS выполнен")
+            sys.stderr.write("DEBUG: STARTTLS выполнен\n")
+            sys.stderr.flush()
+
             server.login(SMTP_USER, SMTP_PASSWORD)
             logger.info("Аутентификация пройдена")
+            sys.stderr.write("DEBUG: аутентификация пройдена\n")
+            sys.stderr.flush()
+
             server.send_message(msg)
             logger.info("Письмо отправлено")
+            sys.stderr.write("DEBUG: письмо отправлено\n")
+            sys.stderr.flush()
+
         print("✅ Письмо успешно отправлено", flush=True)
+
     except Exception as e:
         logger.error(f"❌ Ошибка отправки: {e}")
         logger.error(traceback.format_exc())
