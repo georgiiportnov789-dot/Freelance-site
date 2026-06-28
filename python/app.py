@@ -2,11 +2,19 @@ from fastapi import FastAPI, Request, Form, UploadFile, File, WebSocket, WebSock
 from fastapi.responses import HTMLResponse, Response, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import os, random, uvicorn, uuid, asyncio, re, shutil, json, smtplib, traceback
+import os, random, uvicorn, uuid, asyncio, re, shutil, json, smtplib, traceback, logging, sys
 from email.mime.text import MIMEText
 from email.message import EmailMessage
 from typing import Optional, List
 from .requestBD import request_bd, init_db
+
+# --- НАСТРОЙКА ЛОГИРОВАНИЯ (теперь все ошибки видны в логах Railway) ---
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    stream=sys.stderr
+)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,35 +23,43 @@ app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), na
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 templates.env.cache = None
 
+# Временное хранилище для незавершённых регистраций (до верификации)
 temp = {}
 
 # ------------------------------------------------------------------
-# НАСТРОЙКА SMTP (исправлено: без пробелов + логгирование)
+# НАСТРОЙКА SMTP (порт 587, STARTTLS, пароль БЕЗ ПРОБЕЛОВ)
 # ------------------------------------------------------------------
 SMTP_USER = "georgiiportnov789@gmail.com"
-SMTP_PASSWORD = "vafihcvoyqljvvcx"   # БЕЗ ПРОБЕЛОВ!
+SMTP_PASSWORD = "vafihcvoyqljvvcx"   # Убедитесь, что это ваш пароль приложения (без пробелов)
 
 
 async def send_verification_email(to_email: str, code: str):
     """Отправляет письмо с кодом подтверждения через STARTTLS (порт 587)."""
+    logger.info(f"Попытка отправить письмо на {to_email}")
     msg = MIMEText(f"Ваш код для активации аккаунта: {code}")
     msg["Subject"] = "Код подтверждения SKILLFORGE"
     msg["From"] = SMTP_USER
     msg["To"] = to_email
     try:
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            logger.info("Соединение с SMTP-сервером установлено")
             server.starttls()
+            logger.info("STARTTLS выполнен")
             server.login(SMTP_USER, SMTP_PASSWORD)
+            logger.info("Аутентификация пройдена")
             server.send_message(msg)
-        print("✅ Письмо успешно отправлено")
+            logger.info("Письмо отправлено")
+        print("✅ Письмо успешно отправлено", flush=True)
     except Exception as e:
-        print(f"❌ Ошибка отправки: {e}")
-        traceback.print_exc()   # <-- теперь ошибка полностью видна в логах
+        logger.error(f"❌ Ошибка отправки: {e}")
+        logger.error(traceback.format_exc())
+        sys.stderr.write(f"❌ Ошибка отправки: {e}\n{traceback.format_exc()}\n")
+        sys.stderr.flush()
         raise
 
 
 # ------------------------------------------------------------------
-# СТАРТОВОЕ СОБЫТИЕ
+# СТАРТОВОЕ СОБЫТИЕ – инициализация БД
 # ------------------------------------------------------------------
 @app.on_event("startup")
 async def startup():
@@ -51,7 +67,7 @@ async def startup():
 
 
 # ------------------------------------------------------------------
-# ВСЕ ОБРАБОТЧИКИ (без изменений)
+# ВСЕ ОБРАБОТЧИКИ
 # ------------------------------------------------------------------
 @app.get("/")
 async def get_reg_page(request: Request):
@@ -213,6 +229,7 @@ async def register(
         email: str = Form(...),
         password: str = Form(...),
 ):
+    logger.info(f"Попытка регистрации: email={email}")
     session_id = request.cookies.get("session_id")
     if len(password) < 8:
         return Response("Пароль должен быть не короче 8 символов.")
@@ -224,12 +241,16 @@ async def register(
     if existing:
         return Response("Email уже привязан к аккаунту")
     verify_code = str(random.randint(100000, 999999))
-    print(f"Код верификации: {verify_code}")
+    print(f"Код верификации: {verify_code}", flush=True)
+    logger.info(f"Сгенерирован код для {email}: {verify_code}")
 
     # ---- ОТПРАВКА ПИСЬМА С КОДОМ ----
     try:
         await send_verification_email(email, verify_code)
+        logger.info("Письмо успешно отправлено (после вызова)")
     except Exception as e:
+        logger.error(f"Ошибка при отправке письма: {e}")
+        logger.error(traceback.format_exc())
         return Response(f"Не удалось отправить код на почту: {e}")
 
     temp[str(session_id)] = {
@@ -251,12 +272,15 @@ async def resend_code(request: Request):
         return Response("Сессия не найдена. Зарегистрируйтесь заново.")
 
     verify_code = str(random.randint(100000, 999999))
-    print(f"Новый код верификации: {verify_code}")
+    print(f"Новый код верификации: {verify_code}", flush=True)
+    logger.info(f"Новый код для {temp[session_key]['email']}: {verify_code}")
 
     # ---- ОТПРАВКА НОВОГО КОДА ----
     try:
         await send_verification_email(temp[session_key]["email"], verify_code)
     except Exception as e:
+        logger.error(f"Ошибка при повторной отправке: {e}")
+        logger.error(traceback.format_exc())
         return Response(f"Не удалось отправить код на почту: {e}")
 
     temp[session_key]["verify-code"] = verify_code
