@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Form, UploadFile, File, WebSocket, WebSock
 from fastapi.responses import HTMLResponse, Response, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import os, random, uvicorn, uuid, asyncio, re, shutil, json, smtplib
+import os, random, uvicorn, uuid, asyncio, re, shutil, json, smtplib, traceback
 from email.mime.text import MIMEText
 from email.message import EmailMessage
 from typing import Optional, List
@@ -15,14 +15,13 @@ app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), na
 templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 templates.env.cache = None
 
-# Временное хранилище для незавершённых регистраций (до верификации)
 temp = {}
 
 # ------------------------------------------------------------------
-# НАСТРОЙКА SMTP (исправлено: порт 587 + STARTTLS)
+# НАСТРОЙКА SMTP (исправлено: без пробелов + логгирование)
 # ------------------------------------------------------------------
 SMTP_USER = "georgiiportnov789@gmail.com"
-SMTP_PASSWORD = "vafi hcvo yqlj vvcx"  # ЗАМЕНИТЕ НА ВАШ ПАРОЛЬ ПРИЛОЖЕНИЯ, ЕСЛИ НУЖНО
+SMTP_PASSWORD = "vafihcvoyqljvvcx"   # БЕЗ ПРОБЕЛОВ!
 
 
 async def send_verification_email(to_email: str, code: str):
@@ -33,17 +32,18 @@ async def send_verification_email(to_email: str, code: str):
     msg["To"] = to_email
     try:
         with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()                     # Включаем шифрование
+            server.starttls()
             server.login(SMTP_USER, SMTP_PASSWORD)
             server.send_message(msg)
         print("✅ Письмо успешно отправлено")
     except Exception as e:
         print(f"❌ Ошибка отправки: {e}")
+        traceback.print_exc()   # <-- теперь ошибка полностью видна в логах
         raise
 
 
 # ------------------------------------------------------------------
-# СТАРТОВОЕ СОБЫТИЕ – инициализация БД
+# СТАРТОВОЕ СОБЫТИЕ
 # ------------------------------------------------------------------
 @app.on_event("startup")
 async def startup():
