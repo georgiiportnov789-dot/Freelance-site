@@ -1,11 +1,13 @@
 from fastapi.templating import Jinja2Templates
+from fastapi import WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse, Response, RedirectResponse
+from fastapi.responses import HTMLResponse, Response, RedirectResponse, JSONResponse
 from fastapi import FastAPI, Request, Form, UploadFile, File
 import os, random, uvicorn, uuid, asyncio, aiosmtplib, re, shutil
 from email.message import EmailMessage
 from typing import Optional, List
 from requestBD import request_bd, init_db
+import json
 
 app = FastAPI()
 
@@ -491,5 +493,253 @@ async def filter_mytasks(request: Request, salary_from: str = Form(None), salary
         return templates.TemplateResponse(request, "orders.html", )
 
 
+
+# ── WebSocket менеджер ────────────────────────────────────────────────
+
+class ConnectionManager:
+    def __init__(self):
+        # user_id -> WebSocket
+        self.active: dict[str, WebSocket] = {}
+
+    async def connect(self, user_id: str, ws: WebSocket):
+        await ws.accept()
+        self.active[user_id] = ws
+
+    def disconnect(self, user_id: str):
+        self.active.pop(user_id, None)
+
+    async def send_to(self, user_id: str, data: dict):
+        ws = self.active.get(user_id)
+        if ws:
+            try:
+                await ws.send_text(json.dumps(data, ensure_ascii=False))
+            except Exception:
+                self.disconnect(user_id)
+
+    async def broadcast_to_pair(self, sender_id: str, receiver_id: str, data: dict):
+        await self.send_to(sender_id, data)
+        await self.send_to(receiver_id, data)
+
+
+manager = ConnectionManager()
+
+
+# ── /me — узнать свой ID (нужен фронтенду) ───────────────────────────
+
+@app.get("/me")
+async def get_me(request: Request):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        return JSONResponse({"error": "not authenticated"}, status_code=401)
+    rows = await request_bd("SELECT id, fio FROM users WHERE id = ?", (session_id,))
+    if not rows:
+        return JSONResponse({"error": "user not found"}, status_code=404)
+    return JSONResponse({"id": rows[0][0], "name": rows[0][1] or ""})
+
+
+# ── /chats — список диалогов текущего пользователя ───────────────────
+
+@app.get("/chats")
+async def get_chats(request: Request):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        return JSONResponse([], status_code=401)
+
+    # Все уникальные собеседники
+    rows = await request_bd("""
+                            SELECT DISTINCT CASE WHEN sender_id = ? THEN receiver_id ELSE sender_id END AS partner_id
+                            FROM messages
+                            WHERE sender_id = ?
+                               OR receiver_id = ?
+                            """, (session_id, session_id, session_id))
+
+    chats = []
+    for (partner_id,) in rows:
+        user_rows = await request_bd(
+            "SELECT fio FROM users WHERE id = ?", (partner_id,)
+        )
+        if not user_rows:
+            continue
+        fio = user_rows[0][0] or ""
+        parts = fio.strip().split()
+        initials = "".join(p[0].upper() for p in parts[:2] if p) or "?"
+
+        # Последнее сообщение
+        last_rows = await request_bd("""
+                                     SELECT text, created_at
+                                     FROM messages
+                                     WHERE (sender_id = ? AND receiver_id = ?)
+                                        OR (sender_id = ? AND receiver_id = ?)
+                                     ORDER BY created_at DESC LIMIT 1
+                                     """, (session_id, partner_id, partner_id, session_id))
+
+        last_message = last_rows[0][0][:40] if last_rows else ""
+
+        # Непрочитанные (сообщения от партнёра, которые пришли последними)
+        unread_rows = await request_bd("""
+                                       SELECT COUNT(*)
+                                       FROM messages
+                                       WHERE sender_id = ?
+                                         AND receiver_id = ?
+                                         AND created_at > (SELECT COALESCE(MAX(created_at), '1970-01-01')
+                                                           FROM messages
+                                                           WHERE sender_id = ?
+                                                             AND receiver_id = ?)
+                                       """, (partner_id, session_id, session_id, partner_id))
+        unread = unread_rows[0][0] if unread_rows else 0
+
+        chats.append({
+            "id": partner_id,
+            "name": fio,
+            "initials": initials,
+            "last_message": last_message,
+            "unread": unread,
+        })
+
+    return JSONResponse(chats)
+
+
+# ── /messages/{user_id} — история переписки ──────────────────────────
+
+@app.get("/messages/{with_user_id}")
+async def get_messages(request: Request, with_user_id: str):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        return JSONResponse([], status_code=401)
+
+    rows = await request_bd("""
+                            SELECT sender_id, receiver_id, text, created_at
+                            FROM messages
+                            WHERE (sender_id = ? AND receiver_id = ?)
+                               OR (sender_id = ? AND receiver_id = ?)
+                            ORDER BY created_at ASC LIMIT 200
+                            """, (session_id, with_user_id, with_user_id, session_id))
+
+    return JSONResponse([
+        {"sender_id": r[0], "receiver_id": r[1], "text": r[2], "created_at": r[3]}
+        for r in rows
+    ])
+
+
+# ── /send-message — HTTP fallback отправки ───────────────────────────
+
+@app.post("/send-message")
+async def send_message_http(request: Request):
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        return JSONResponse({"error": "not authenticated"}, status_code=401)
+
+    body = await request.json()
+    receiver_id = body.get("receiver_id", "").strip()
+    text = body.get("text", "").strip()
+
+    if not receiver_id or not text:
+        return JSONResponse({"error": "bad request"}, status_code=400)
+
+    await request_bd(
+        "INSERT INTO messages (sender_id, receiver_id, text) VALUES (?, ?, ?)",
+        (session_id, receiver_id, text),
+    )
+    return JSONResponse({"ok": True})
+
+
+# ── /search-users — поиск пользователей для нового чата ──────────────
+
+@app.get("/search-users")
+async def search_users(request: Request, q: str = ""):
+    session_id = request.cookies.get("session_id")
+    if not session_id or not q.strip():
+        return JSONResponse([])
+
+    rows = await request_bd("""
+                            SELECT id, fio
+                            FROM users
+                            WHERE id != ? AND (fio LIKE ? OR email LIKE ?)
+        LIMIT 20
+                            """, (session_id, f"%{q}%", f"%{q}%"))
+
+    result = []
+    for (uid, fio) in rows:
+        fio = fio or ""
+        parts = fio.strip().split()
+        initials = "".join(p[0].upper() for p in parts[:2] if p) or "?"
+        result.append({"id": uid, "name": fio, "initials": initials, "last_message": "", "unread": 0})
+
+    return JSONResponse(result)
+
+
+# ── WebSocket эндпоинт ────────────────────────────────────────────────
+
+@app.websocket("/ws/{user_id}")
+async def websocket_endpoint(websocket: WebSocket, user_id: str):
+    # Простая проверка: пользователь должен существовать
+    rows = await request_bd("SELECT id FROM users WHERE id = ?", (user_id,))
+    if not rows:
+        await websocket.close(code=4001)
+        return
+
+    await manager.connect(user_id, websocket)
+    try:
+        while True:
+            raw = await websocket.receive_text()
+            data = json.loads(raw)
+
+            receiver_id = data.get("receiver_id", "").strip()
+            text = data.get("text", "").strip()
+            if not receiver_id or not text:
+                continue
+
+            # Сохранить в БД
+            await request_bd(
+                "INSERT INTO messages (sender_id, receiver_id, text) VALUES (?, ?, ?)",
+                (user_id, receiver_id, text),
+            )
+
+            # Получить created_at только что созданной записи
+            ts_rows = await request_bd("""
+                                       SELECT created_at
+                                       FROM messages
+                                       WHERE sender_id = ?
+                                         AND receiver_id = ?
+                                       ORDER BY id DESC LIMIT 1
+                                       """, (user_id, receiver_id))
+            created_at = ts_rows[0][0] if ts_rows else ""
+
+            msg = {
+                "sender_id": user_id,
+                "receiver_id": receiver_id,
+                "text": text,
+                "created_at": created_at,
+            }
+
+            # Доставить обоим участникам (если онлайн)
+            await manager.broadcast_to_pair(user_id, receiver_id, msg)
+
+    except WebSocketDisconnect:
+        manager.disconnect(user_id)
+    except Exception as e:
+        print(f"WS ошибка ({user_id}): {e}")
+        manager.disconnect(user_id)
+
+@app.get("/search-users")
+async def search_users(request: Request, q: str = ""):
+    session_id = request.cookies.get("session_id")
+    if not session_id or not q.strip():
+        return JSONResponse([])
+
+    rows = await request_bd("""
+        SELECT id, fio FROM users
+        WHERE id != ? AND (fio LIKE ? OR email LIKE ?)
+        LIMIT 20
+    """, (session_id, f"%{q}%", f"%{q}%"))
+
+    result = []
+    for (uid, fio) in rows:
+        fio = fio or ""
+        parts = fio.strip().split()
+        initials = "".join(p[0].upper() for p in parts[:2] if p) or "?"
+        result.append({"id": uid, "name": fio, "initials": initials, "last_message": "", "unread": 0})
+
+    return JSONResponse(result)
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8045, reload=True)
