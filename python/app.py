@@ -35,7 +35,6 @@ SMTP_PASSWORD = "vafihcvoyqljvvcx"
 
 async def send_verification_email(to_email: str, code: str):
     """Функция оставлена, но не вызывается."""
-    # (код отправки не изменяется, но мы не будем его вызывать)
     pass
 
 
@@ -428,7 +427,7 @@ async def get_user_profile(request: Request, user_id: str):
     return templates.TemplateResponse(request, "profile-view.html", {"user": user})
 
 
-# --------------------------- СОЗДАНИЕ ЗАДАЧИ ---------------------------
+# --------------------------- СОЗДАНИЕ ЗАДАЧИ (с логированием) ---------------------------
 @app.post("/tasks/create")
 async def create_task(
         request: Request,
@@ -439,33 +438,52 @@ async def create_task(
         description: str = Form(...),
         photos: Optional[List[UploadFile]] = File(None),
 ):
+    logger.info(f"Создание задачи, получено файлов: {len(photos) if photos else 0}")
+
     jobs_id = str(uuid.uuid4())
     len_photo = len(photos) if photos else 1
+    logger.info(f"Будет сохранено {len_photo} файлов (включая дефолтный)")
+
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        logger.error("Нет сессии пользователя")
+        return Response("Ошибка: не авторизован", status_code=403)
+
     await request_bd(
         "INSERT INTO jobs (id, header, salary_min, date, description, author_id, photos, profession) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        (jobs_id, title, cost, deadline, description, request.cookies.get("session_id"), str(len_photo), profession)
+        (jobs_id, title, cost, deadline, description, session_id, str(len_photo), profession)
     )
+
     upload_dir = os.path.join(BASE_DIR, "static", "media", "jobs_photo", str(jobs_id))
     os.makedirs(upload_dir, exist_ok=True)
+    logger.info(f"Папка для загрузки: {upload_dir}")
 
     if photos and any(p.filename for p in photos):
         k = 0
         for photo in photos:
             if photo.filename:
                 k += 1
-                ext = ".png"
-                filename = f"{k}{ext}"
+                # Сохраняем как .png
+                filename = f"{k}.png"
                 file_path = os.path.join(upload_dir, filename)
-                content = await photo.read()
-                with open(file_path, "wb") as f:
-                    f.write(content)
+                logger.info(f"Сохраняем файл {photo.filename} как {file_path}")
+                try:
+                    content = await photo.read()
+                    with open(file_path, "wb") as f:
+                        f.write(content)
+                    logger.info(f"Файл успешно сохранён: {file_path}")
+                except Exception as e:
+                    logger.error(f"Ошибка при сохранении файла {photo.filename}: {e}")
+        logger.info(f"Сохранено {k} файлов")
     else:
+        logger.warning("Файлы не были загружены или список пуст, используем дефолтное изображение")
         default_source = os.path.join(BASE_DIR, "static", "media", "sistem-media", "Image.png")
         if os.path.exists(default_source):
             default_dest = os.path.join(upload_dir, "1.png")
             shutil.copy2(default_source, default_dest)
+            logger.info(f"Скопирован дефолтный файл в {default_dest}")
         else:
-            print("Дефолтное изображение не найдено!")
+            logger.error("Дефолтное изображение не найдено!")
 
     response = Response()
     response.headers["Location"] = "/orders"
