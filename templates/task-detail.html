@@ -1,96 +1,141 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>SkillForge - Просмотр задачи</title>
-    <link rel="stylesheet" href="../static/css/task.css" />
-    <link rel="stylesheet" href="../static/css/common.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <time class="time"
-        >LOCAL&nbsp;/&nbsp;<span class="time__value">16:12:09</span></time
-      >
-      <h1 class="brand">SKILLFORGE</h1>
-      <button class="back-btn" onclick="history.back()">← Назад</button>
-    </header>
+    <link rel="stylesheet" href="/static/css/task.css"/>
+    <link rel="stylesheet" href="/static/css/common.css"/>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+<header class="topbar">
+    <time class="time">LOCAL&nbsp;/&nbsp;<span class="time__value">16:12:09</span></time>
+    <h1 class="brand">SKILLFORGE</h1>
+    <button class="back-btn" onclick="history.back()">← Назад</button>
+</header>
 
-    <main class="task-layout">
-      <section class="task">
-        <div class="task__cover">
-          <img src="{{ task.image_url }}" alt="Обложка: {{ task.title }}" />
+<main class="task-layout" style="width: 1000px">
+    <section class="task">
+        <!-- Слайдер вместо статичной обложки -->
+        <div class="task__cover-slider" id="taskCoverSlider">
+            <div class="create-task__media-slider" id="viewSliderContainer">
+                <!-- слайды генерируются скриптом -->
+            </div>
+            <div class="create-task__media-pagination" id="viewPaginationContainer">
+                <!-- точки генерируются скриптом -->
+            </div>
         </div>
+
         <div class="task__body">
-          <div class="task__header">
-            <div class="task__header-info">
-              <h2 class="task__title">{{ task.title }}</h2>
-              <div class="task__price">
-                <span class="text-secondary">{{ task.price_prefix }}</span> {{
-                task.price }} РУБЛЕЙ
-              </div>
+            <div class="task__header">
+                <div class="task__header-info">
+                    <h2 class="task__title">{{ task.title }}</h2>
+                    <div class="task__price">
+                        <span class="text-secondary">до </span> {{ task.price }} ₽
+                    </div>
+                </div>
+                <a class="task__author-avatar" href="/profile/{{ task.author_id }}" title="{{ task.author_name }}">
+                    <span class="avatar__mono">{{ task.initials }}</span>
+                </a>
             </div>
-            <div class="task__author-avatar">
-              {% if task.author_avatar_url %}<img
-                src="{{ task.author_avatar_url }}"
-                alt="Аватар"
-              />{% endif %}
+            <hr class="task__divider"/>
+            <div class="task__meta">
+                <div class="task__meta-item">
+                    <span class="task__meta-label">Сроки выполнения<br></span>
+                    <span class="task__meta-value">{{ task.deadline }}</span>
+                </div>
+                <div class="task__meta-item">
+                    <span class="task__meta-label">Профессия</span>
+                    <span class="task__meta-value">{{ task.profession }}</span>
+                </div>
             </div>
-          </div>
-          <hr class="task__divider" />
-          <div class="task__meta">
-            <div class="task__meta-item">
-              <span class="task__meta-label">Сроки выполнения</span
-              ><span class="task__meta-value">{{ task.deadline }}</span>
+            <hr class="task__divider"/>
+            <div class="task__description">
+                <h3>Описание задачи</h3>
+                <p style="overflow-wrap: break-word; line-height: 1.6; font-size: var(--font-size-sm);">
+                    {{ task.description }}
+                </p>
             </div>
-            <div class="task__meta-item">
-              <span class="task__meta-label">Место работы</span
-              ><span class="task__meta-value">{{ task.location }}</span>
+            {% if task.is_author %}
+            <div class="task__actions">
+                <button class="task__delete-btn"
+                        hx-post="/task/delete"
+                        hx-vals='{"task_id": "{{ task.id }}"}'
+                        hx-confirm="Вы уверены, что хотите удалить эту задачу?"
+                        hx-target="body"
+                        hx-swap="outerHTML"
+                        hx-push-url="/orders">
+                    Удалить
+                </button>
             </div>
-          </div>
-          <hr class="task__divider" />
-          <div class="task__description">
-            <h3>Описание задачи</h3>
-            <p
-              style="
-                white-space: pre-wrap;
-                line-height: 1.6;
-                font-size: var(--font-size-sm);
-              "
-            >
-              {{ task.description }}
-            </p>
-          </div>
-          <div class="task__actions">
-            <button class="task__delete-btn">Удалить</button>
-          </div>
+            {% endif %}
         </div>
-      </section>
+    </section>
 
-      <aside class="task__responses">
-        {% if task.responses %} {% for response in task.responses %}
+    <!-- Список откликов с ценой и кнопками -->
+    <aside class="task__responses">
+        {% if task.executor_id %}
+        {# Если исполнитель выбран – показываем только его #}
+        {% for response in task.responses %}
+        {% if response.user_id == task.executor_id %}
         <div class="task__response">
-          <a class="task__response-avatar" href="profile-view.html"
-            >{{ response.initials }}</a
-          >
-          <button
-            class="task__hire-btn"
-            data-candidate-id="{{ response.candidate_id }}"
-          >
-            Нанять
-          </button>
+            <a class="task__response-avatar" href="/profile/{{ response.user_id }}">
+                {{ response.initials }}
+            </a>
+            <span class="task__response-cost">{{ response.cost }} ₽</span>
+            {% if task.is_author %}
+            <button class="task__fin-btn"
+                    hx-post="/task/complete/{{ task.id }}"
+                    hx-target="body"
+                    hx-swap="outerHTML"
+                    hx-push-url="true"
+                    hx-confirm="Вы уверены, после нажатия заявка удалиться?">Выполнил
+            </button>
+            {% else %}
+            <button class="task__fin-btn" disabled>Выполняет</button>
+            {% endif %}
         </div>
-        <hr class="task__divider task__divider--dark" />
-        {% endfor %} {% else %}
-        <p
-          class="text-secondary"
-          style="font-size: var(--font-size-sm); text-align: center"
-        >
-          Откликов пока нет
-        </p>
+        <hr class="task__divider task__divider--dark"/>
         {% endif %}
-      </aside>
-    </main>
-    <script src="../static/js/realtime.js"></script>
-  </body>
+        {% endfor %}
+        {% elif task.responses %}
+        {# Если отклики есть, но исполнитель не выбран – список всех #}
+        {% for response in task.responses %}
+        <div class="task__response">
+            <a class="task__response-avatar" href="/profile/{{ response.user_id }}">
+                {{ response.initials }}
+            </a>
+            <span class="task__response-cost">{{ response.cost }} ₽</span>
+            {% if task.is_author %}
+            <button class="task__hire-btn"
+                    hx-post="/task/hire/{{ task.id }}"
+                    hx-vals='{"user_id": "{{ response.user_id }}"}'
+                    hx-target="body"
+                    hx-swap="outerHTML"
+                    hx-push-url="true">Нанять
+            </button>
+            {% else %}
+            <button class="task__hire-btn" disabled>Отклик</button>
+            {% endif %}
+        </div>
+        <hr class="task__divider task__divider--dark"/>
+        {% endfor %}
+        {% else %}
+        <p class="text-secondary" style="font-size: var(--font-size-sm); text-align: center;">Откликов пока нет</p>
+        {% endif %}
+    </aside>
+</main>
+
+<script src="../static/js/realtime.js"></script>
+<script src="../static/js/task_slider.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = {{ task.images|tojson }};
+        if (typeof initTaskSlider === 'function') {
+            initTaskSlider('viewSliderContainer', 'viewPaginationContainer', images);
+        }
+    });
+</script>
+</body>
 </html>

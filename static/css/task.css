@@ -1,7 +1,10 @@
 @import url("tokens.css");
 @import url("common.css");
+
+/* ===== Базовые стили страницы задачи ===== */
 .task-layout {
   max-width: 1000px;
+
   margin: 20px auto 60px;
   padding: 0 20px;
   display: grid;
@@ -9,6 +12,7 @@
   gap: 40px;
   align-items: start;
 }
+
 .task {
   background: var(--bg-surface);
   border-radius: 16px;
@@ -16,87 +20,181 @@
   display: flex;
   flex-direction: column;
 }
-.task__cover {
+
+/* ===== Обложка (слайдер) ===== */
+.task__cover-slider {
   width: 100%;
-  height: var(--cover-height);
+  height: var(--cover-height, 240px);
+  background: var(--bg-surface);
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
 }
-.task__cover img {
+
+.task__cover-slider .create-task__media-slider {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  user-select: none;
+  scroll-behavior: smooth;
 }
+
+.task__cover-slider .create-task__media-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.task__cover-slider .create-task__media-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: start;
+}
+
+.task__cover-slider .create-task__media-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* ключевое: не растягивает, обрезает */
+  display: block;
+  background: var(--bg-surface);
+}
+
+.task__cover-slider .create-task__media-pagination {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 5;
+}
+
+.task__cover-slider .create-task__media-dot {
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--color-white);
+  background: transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.task__cover-slider .create-task__media-dot--active {
+  background: var(--color-white);
+}
+
+/* ===== Тело задачи ===== */
 .task__body {
   padding: var(--space-lg) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: space-between;
+  gap: 10px;
 }
+
 .task__header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
 }
+.task__header-info{
+  width: 90%;
+}
 .task__title {
   font-size: var(--font-size-lg);
   font-weight: 600;
   line-height: 1.4;
   margin: 0 0 12px 0;
+  text-align: center;
 }
+
 .task__price {
   font-size: var(--font-size-md);
   font-weight: 700;
 }
+
+/* ===== Монограмма автора ===== */
 .task__author-avatar {
   width: 48px;
   height: 48px;
   background: #c4c4c4;
   border-radius: 50%;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #000;
+  font-weight: 700;
+  font-size: 18px;
+  transition: background 0.2s;
   overflow: hidden;
 }
-.task__author-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+.task__author-avatar:hover {
+  background: #aaa;
 }
+.avatar__mono {
+  display: inline-block;
+  line-height: 1;
+  color: inherit;
+}
+
+/* ===== Разделители и мета ===== */
 .task__divider {
   border: none;
   height: 1px;
   background: var(--bg-surface-light);
   margin: var(--space-lg) 0;
 }
+
 .task__meta {
   display: flex;
   gap: 60px;
 }
+
 .task__meta-item {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
+
 .task__meta-label {
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
 }
+
 .task__meta-value {
   font-size: var(--font-size-sm);
   font-weight: 600;
 }
+
+/* ===== Описание ===== */
 .task__description h3 {
   font-size: var(--font-size-md);
   font-weight: 600;
   margin: 0 0 var(--space-md) 0;
 }
+
 .task__description p {
   font-size: var(--font-size-sm);
   line-height: 1.6;
   margin: 0 0 var(--space-md) 0;
   white-space: pre-wrap;
 }
+
+/* ===== Кнопка удаления ===== */
 .task__actions {
   display: flex;
   justify-content: flex-end;
   margin-top: var(--space-xl);
 }
+
 .task__delete-btn {
   background: #b91c1c;
   color: #fff;
@@ -112,17 +210,23 @@
 .task__delete-btn:hover {
   opacity: 0.8;
 }
+
+/* ===== Отклики (сайдбар) ===== */
 .task__responses {
   display: flex;
   flex-direction: column;
   padding-top: var(--space-lg);
+  justify-content: center;
+
 }
+
 .task__response {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 0;
 }
+
 .task__response-avatar {
   width: 52px;
   height: 52px;
@@ -141,6 +245,7 @@
   cursor: pointer;
   transition: transform 0.1s ease;
 }
+
 .task__hire-btn {
   background: var(--action-bg);
   color: var(--action-text);
@@ -156,16 +261,38 @@
 .task__hire-btn:hover {
   background: #e0e0e0;
 }
+.task__fin-btn{
+  background: var(--bg-main);
+  color: var(--color-white);
+
+  padding: 8px 24px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-main);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition-default);
+  border: 2px solid var(--action-bg) ;
+
+}
+.task__fin-btn:hover {
+  background: #e0e0e0;
+  color: var(--text-secondary);
+
+}
+
 .task__divider--dark {
   background: #1a1a1a;
   margin: var(--space-md) 0;
 }
+
+/* ===== Вариант single-layout (для task-open) ===== */
 .single-layout {
   max-width: 520px;
   margin: var(--space-2xl) auto;
   padding: 0 15px;
 }
-.single-layout .task__cover {
+.single-layout .task__cover-slider {
   height: 240px;
 }
 .single-layout .task__body {
@@ -219,6 +346,8 @@
   color: #cccccc;
   margin-bottom: 14px;
 }
+
+/* ===== Карточка отклика (для view-application) ===== */
 .response-card {
   background: var(--bg-surface);
   border-radius: var(--radius-md);
@@ -273,11 +402,14 @@
 .response__apply-btn:hover {
   opacity: 0.95;
 }
+
+/* ===== Футер (для task-open) ===== */
 .footer-divider {
   border: none;
   border-top: 1px solid var(--bg-surface-light);
   margin: var(--space-3xl) var(--space-2xl) var(--space-xl) var(--space-2xl);
 }
+
 .footer {
   max-width: 1200px;
   margin: 0 auto;
@@ -306,4 +438,10 @@
 }
 .footer__link:hover {
   color: #cccccc;
+}
+.task__response-cost {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+       /* прижимает цену влево, кнопку вправо */
 }

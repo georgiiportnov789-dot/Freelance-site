@@ -28,8 +28,9 @@ async def init_db():
                 description TEXT,
                 author_id TEXT NOT NULL,
                 photos TEXT,
-                responses_count INTEGER DEFAULT 0,
+                responses_count TEXT DEFAULT "[]",
                 profession TEXT,
+                executor_id TEXT DEFAULT null,
                 FOREIGN KEY (author_id) REFERENCES users (id)
             )
         ''')

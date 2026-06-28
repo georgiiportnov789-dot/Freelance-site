@@ -1,91 +1,75 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>SKILLFORGE - Активная заявка</title>
-    <link rel="stylesheet" href="../static/css/task.css" />
-    <link rel="stylesheet" href="../static/css/common.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <time class="time"
-        >LOCAL&nbsp;/&nbsp;<span class="time__value">16:12:09</span></time
-      >
-      <h1 class="brand">SKILLFORGE</h1>
-      <button class="back-btn" onclick="history.back()">← Назад</button>
-    </header>
+    <link rel="stylesheet" href="/static/css/task.css"/>
+    <link rel="stylesheet" href="/static/css/common.css"/>
+    <link rel="stylesheet" href="/static/css/create-task.css"/>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+<header class="topbar">
+    <time class="time">LOCAL&nbsp;/&nbsp;<span class="time__value">16:12:09</span></time>
+    <h1 class="brand">SKILLFORGE</h1>
+    <button class="back-btn" onclick="history.back()">← Назад</button>
+</header>
 
-    <main class="single-layout">
-      <section class="task">
-        <div class="task__cover">
-          <img src="{{ task.image_url }}" alt="Обложка: {{ task.title }}" />
+<main class="single-layout">
+    <section class="task">
+        <!-- Слайдер вместо статичной обложки -->
+        <div class="task__cover-slider" id="taskCoverSlider">
+            <div class="create-task__media-slider" id="viewSliderContainer">
+                <!-- слайды генерируются скриптом -->
+            </div>
+            <div class="create-task__media-pagination" id="viewPaginationContainer">
+                <!-- точки генерируются скриптом -->
+            </div>
         </div>
+
         <div class="task__body">
-          <div class="task__header-container">
-            <div class="task__header-text">
-              <h2 class="task__title">{{ task.title }}</h2>
-              <div class="task__price">
-                <span class="task__price-prefix">{{ task.price_prefix }}</span>
-                {{ task.price }} РУБЛЕЙ
-              </div>
+            <div class="task__header-container">
+                <div class="task__header-info">
+                    <h2 class="task__title">{{ task.title }}</h2>
+                    <div class="task__price">
+                        <span class="task__price-prefix">до</span>
+                        {{ task.price }} ₽
+                    </div>
+                </div>
+                <a class="task__author-avatar" href="/profile/{{ task.author_id }}" title="{{ task.author_name }}">
+                    <span class="avatar__mono">{{ task.initials }}</span>
+                </a>
             </div>
-            <div class="task__author-avatar">
-              {% if task.author_avatar_url %}<img
-                src="{{ task.author_avatar_url }}"
-                alt="Аватар заказчика"
-              />{% endif %}
+            <div class="task__meta">
+                <div>
+                    <span class="task__meta-label">Сроки выполнения<br></span>
+                    <span class="task__meta-value">{{ task.deadline }}</span>
+                </div>
+                <div>
+                    <span class="task__meta-label">Профессия</span>
+                    <span class="task__meta-value">{{ task.profession }}</span>
+                </div>
             </div>
-          </div>
-          <div class="task__meta">
-            <div>
-              <span class="task__meta-label">Сроки выполнения</span
-              ><span class="task__meta-value">{{ task.deadline }}</span>
+            <div class="task__description">
+                <h3>Описание задачи</h3>
+                <div class="task__desc-text" style="overflow-wrap: break-word; line-height: 1.5;">
+                    {{ task.description }}
+                </div>
             </div>
-            <div>
-              <span class="task__meta-label">Место работы</span
-              ><span class="task__meta-value">{{ task.location }}</span>
-            </div>
-          </div>
-          <div class="task__description">
-            <h3>Описание задачи</h3>
-            <div
-              class="task__desc-text"
-              style="white-space: pre-wrap; line-height: 1.5"
-            >
-              {{ task.description }}
-            </div>
-          </div>
         </div>
-      </section>
-    </main>
+    </section>
+</main>
 
-    <hr class="footer-divider" />
-    <footer class="footer">
-      <div class="footer__col">
-        <h4>Соц-сети</h4>
-        <a href="{{ site_settings.telegram_url }}" class="footer__link"
-          >Telegram ↗</a
-        ><a href="{{ site_settings.vk_url }}" class="footer__link"
-          >Вконтакте ↗</a
-        >
-      </div>
-      <div class="footer__col">
-        <h4>Университет</h4>
-        <p class="footer__text">{{ site_settings.university_name }}</p>
-      </div>
-      <div class="footer__col">
-        <h4>Телефон</h4>
-        <p class="footer__text">{{ site_settings.phone }}</p>
-      </div>
-      <div class="footer__col">
-        <h4>Почта</h4>
-        <a href="mailto:{{ site_settings.email }}" class="footer__link"
-          >{{ site_settings.email }} ↗</a
-        >
-      </div>
-    </footer>
-
-    <script src="../static/js/realtime.js"></script>
-  </body>
+<script src="../static/js/realtime.js"></script>
+<script src="../static/js/task_slider.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = {{ task.images|tojson }};
+        if (typeof initTaskSlider === 'function') {
+            initTaskSlider('viewSliderContainer', 'viewPaginationContainer', images);
+        }
+    });
+</script>
+</body>
 </html>

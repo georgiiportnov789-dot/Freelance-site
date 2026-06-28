@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" href="../static/css/common.css" />
     <link rel="stylesheet" href="../static/css/vacancy.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
   </head>
   <body>
     <navbar-component
@@ -24,7 +26,7 @@
     <div class="filters" style="margin-top: var(--space-2xl)">
       <form
         class="filters__form"
-        hx-get="/filters/mytasks"
+        hx-post="/filters/myapplication"
         hx-trigger="change, keyup delay:400ms"
         hx-target="#filters-output"
       >
@@ -384,14 +386,11 @@
       {% for vacancy in vacancies %}
       <a
         class="vacancy"
-        hx-get="/task/{{ vacancy.id }}"
-        hx-target="body"
-        hx-push-url="true"
-        href="task-open.html"
+        href="/task/{{ vacancy.id }}"
       >
         <div class="vacancy__image-wrap">
           <img
-            src="../static/media/sistem-media/Image.png"
+            src="../static/media/jobs_photo/{{ vacancy.id }}/1.png"
             class="vacancy__image"
           />
         </div>
@@ -399,14 +398,14 @@
           <h3 class="vacancy__title">{{ vacancy.title }}</h3>
           <div class="vacancy__meta">
             <span class="vacancy__author">{{ vacancy.avtor }}</span
-            ><span class="vacancy__deadline">{{ vacancy.dedline }}</span>
+            ><span class="vacancy__deadline">дедлайн: {{ vacancy.dedline }}</span>
           </div>
           <hr class="vacancy__divider" />
           <div class="vacancy__footer">
             <span class="vacancy__cost"
               >до
               <span class="vacancy__cost-value">{{ vacancy.cost }}</span></span
-            ><span class="vacancy__responses">{{ vacancy.otcklick }}</span>
+            ><span class="vacancy__responses">откликов: {{ vacancy.otcklick }}</span>
           </div>
         </div>
       </a>

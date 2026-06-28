@@ -11,6 +11,7 @@
 </head>
 <body>
 
+{# Полная страница – рендерится только при обычном GET-запросе #}
 {% if not fragment %}
 
 <navbar-component data-title="Заказы" data-subtitle="Menu"></navbar-component>
@@ -23,7 +24,7 @@
 <div class="filters" style="margin-top: var(--space-2xl)">
     <form
         class="filters__form"
-        hx-post="/orders/filters/mytasks"
+        hx-post="/filters/mytasks"
         hx-trigger="change, keyup delay:400ms"
         hx-target="#filters-output"
     >
@@ -37,6 +38,7 @@
             <span class="filters__header-label">Фильтры</span>
         </div>
         <ul class="filters__list">
+            <!-- все пункты профессий (оставлены как в первом файле) -->
             <li class="filters__item">
                 <span class="filters__item-label">Программист / Web-разработчик</span>
                 <input type="checkbox" name="professions[]" value="Программист / Web-разработчик" class="filters__item-checkbox" />
@@ -172,6 +174,7 @@
                 <div class="filters__view-line"></div>
             </div>
         </label>
+        <!-- КНОПКА ДОБАВЛЕНИЯ -->
         <button class="filters__add-btn" type="button" id="openTaskModalBtn">
             <img class="filters__add-btn__img" src="../static/media/sistem-media/add.png" />
         </button>
@@ -183,7 +186,7 @@
 {# Основной блок с вакансиями – всегда рендерится #}
 <main id="filters-output" class="vacancies">
     {% for vacancy in vacancies %}
-    <a class="vacancy" hx-get="/task/{{ vacancy.id }}" hx-target="body" hx-push-url="true" href="task-detail.html">
+    <a class="vacancy" href="/task/{{ vacancy.id }}">
         <div class="vacancy__image-wrap">
             <img src="/static/media/jobs_photo/{{ vacancy.id }}/1.png" class="vacancy__image" />
         </div>
@@ -207,8 +210,10 @@
     {% endfor %}
 </main>
 
+{# Полная страница – хвост (рендерится только при обычном GET-запросе) #}
 {% if not fragment %}
 
+<!-- МОДАЛЬНОЕ ОКНО СОЗДАНИЯ ЗАДАЧИ -->
 <div class="modal-overlay" id="createTaskModal">
     <div class="modal-content">
         <div class="create-task__container">
@@ -218,7 +223,7 @@
                 </button>
             </div>
             <form class="create-task__form" id="taskForm" method="POST" action="/tasks/create" enctype="multipart/form-data">
-                <!-- поля формы (фото, заголовок, профессия, цена, дата, описание) -->
+                <!-- поле загрузки фото -->
                 <div class="create-task__media">
                     <label class="create-task__media-add">
                         <input type="file" name="photos" class="create-task__media-input" accept="image/*" multiple id="fileInput" />
@@ -300,7 +305,6 @@
 <script src="../static/js/nav.js" defer></script>
 <script src="../static/js/slider.js"></script>
 <script src="../static/js/calendar.js"></script>
-<!--<script src="../static/js/add_task.js"></script>-->
 
 </body>
 </html>

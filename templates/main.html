@@ -1,443 +1,262 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>SKILLFORGE</title>
+    <link rel="stylesheet" href="../static/css/vacancy.css"/>
+    <link rel="stylesheet" href="../static/css/main.css"/>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
 
-    <link rel="stylesheet" href="../static/css/vacancy.css" />
-    <link rel="stylesheet" href="../static/css/main.css" />
-  </head>
-  <body>
-    <navbar-component
-      data-title="Основное"
-      data-subtitle="Меню"
-    ></navbar-component>
+{# Полная страница (рендерится только при обычном GET-запросе) #}
+{% if not fragment %}
 
-    <header class="nav-hero" onmouseenter="fl1()" onmouseleave="fl0()">
-      <time class="time"
-        >LOCAL&nbsp;/&nbsp;<span class="time__value">00:00:00</span></time
-      >
-      <div class="nav-hero__content">
+<navbar-component data-title="Основное" data-subtitle="Меню"></navbar-component>
+
+<header class="nav-hero" onmouseenter="fl1()" onmouseleave="fl0()">
+    <time class="time">LOCAL&nbsp;/&nbsp;<span class="time__value">00:00:00</span></time>
+    <div class="nav-hero__content">
         <h1 class="brand">SKILLFORGE</h1>
         <p class="nav-hero__description">
-          Платформа фриланса с красивым интерфейсом для поиска заказов,
-          портфолио и верификации исполнителей.
+            Платформа фриланса с красивым интерфейсом для поиска заказов,
+            портфолио и верификации исполнителей.
         </p>
-      </div>
-    </header>
+    </div>
+</header>
 
-    <div class="filters">
-      <form
-        class="filters__form"
-        hx-get="/filters"
-        hx-trigger="change, keyup delay:400ms"
-        hx-target="#filters-output"
-      >
+<div class="filters">
+    <form
+            class="filters__form"
+            hx-post="/filters"
+            hx-trigger="change, keyup delay:400ms"
+            hx-target="#filters-output"
+    >
         <div class="filters__header">
-          <div class="filters__header-icon">
-            <div class="filters__header-dot"></div>
-            <div class="filters__header-dot"></div>
-            <div class="filters__header-dot"></div>
-            <div class="filters__header-dot"></div>
-          </div>
-          <span class="filters__header-label">Фильтры</span>
+            <div class="filters__header-icon">
+                <div class="filters__header-dot"></div>
+                <div class="filters__header-dot"></div>
+                <div class="filters__header-dot"></div>
+                <div class="filters__header-dot"></div>
+            </div>
+            <span class="filters__header-label">Фильтры</span>
         </div>
         <ul class="filters__list">
-          <!-- пункты фильтра (сокращено для примера) -->
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Программист / Web-разработчик</span
-            ><input
-              type="checkbox"
-              name="professions[]"
-              value="Программист / Web-разработчик"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Программист / Web-разработчик</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Программист / Web-разработчик"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Разработчик веб и мультимедийных приложений</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Разработчик веб и мультимедийных приложений"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Специалист по тестированию ПО (QA-инженер)</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по тестированию ПО (QA-инженер)"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Администратор баз данных</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Администратор баз данных"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Системный администратор</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Системный администратор"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Специалист по информационным системам</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по информационным системам"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Технический писатель</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Технический писатель"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Специалист по глобальным компьютерным сетям</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по глобальным компьютерным сетям"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Инженер-строитель</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер-строитель"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Инженер по ремонту и обслуживанию автомобильных дорог</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер по ремонту и обслуживанию автомобильных дорог"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Транспортный планировщик</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Транспортный планировщик"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Специалист по сметному делу (Инженер-сметчик)</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по сметному делу (Инженер-сметчик)"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Инженер по водоснабжению и водоотведению</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер по водоснабжению и водоотведению"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Архитектор-проектировщик</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Архитектор-проектировщик"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Ландшафтный архитектор</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Ландшафтный архитектор"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Дизайнер садово-паркового искусства</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Дизайнер садово-паркового искусства"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Специалист по лесному и лесопарковому хозяйству</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по лесному и лесопарковому хозяйству"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Технолог деревообработки</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Технолог деревообработки"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Промышленный эколог / Специалист по техносферной
-              безопасности</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Промышленный эколог / Специалист по техносферной безопасности"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Инженер по техническому обслуживанию и ремонту
-              автотранспорта</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер по техническому обслуживанию и ремонту автотранспорта"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Инженер-технолог деревоперерабатывающих производств</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Инженер-технолог деревоперерабатывающих производств"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Специалист по энерго- и ресурсосберегающим процессам в химической
-              технологии</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по энерго- и ресурсосберегающим процессам в химической технологии"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Специалист по экономической безопасности</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по экономической безопасности"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Специалист по государственному и муниципальному управлению</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист по государственному и муниципальному управлению"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label"
-              >Менеджер по недвижимости / Специалист по оценке бизнеса</span
-            >
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Менеджер по недвижимости / Специалист по оценке бизнеса"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Бухгалтер / Экономист</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Бухгалтер / Экономист"
-              class="filters__item-checkbox"
-            />
-          </li>
-          <li class="filters__item">
-            <span class="filters__item-label">Специалист банковского дела</span>
-            <input
-              type="checkbox"
-              name="professions[]"
-              value="Специалист банковского дела"
-              class="filters__item-checkbox"
-            />
-          </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Программист / Web-разработчик</span>
+                <input type="checkbox" name="professions[]" value="Программист / Web-разработчик"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Разработчик веб и мультимедийных приложений</span>
+                <input type="checkbox" name="professions[]" value="Разработчик веб и мультимедийных приложений"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист по тестированию ПО (QA-инженер)</span>
+                <input type="checkbox" name="professions[]" value="Специалист по тестированию ПО (QA-инженер)"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Администратор баз данных</span>
+                <input type="checkbox" name="professions[]" value="Администратор баз данных"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Системный администратор</span>
+                <input type="checkbox" name="professions[]" value="Системный администратор"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист по информационным системам</span>
+                <input type="checkbox" name="professions[]" value="Специалист по информационным системам"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Технический писатель</span>
+                <input type="checkbox" name="professions[]" value="Технический писатель"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист по глобальным компьютерным сетям</span>
+                <input type="checkbox" name="professions[]" value="Специалист по глобальным компьютерным сетям"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Инженер-строитель</span>
+                <input type="checkbox" name="professions[]" value="Инженер-строитель" class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Инженер по ремонту и обслуживанию автомобильных дорог</span>
+                <input type="checkbox" name="professions[]"
+                       value="Инженер по ремонту и обслуживанию автомобильных дорог" class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Транспортный планировщик</span>
+                <input type="checkbox" name="professions[]" value="Транспортный планировщик"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист по сметному делу (Инженер-сметчик)</span>
+                <input type="checkbox" name="professions[]" value="Специалист по сметному делу (Инженер-сметчик)"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Инженер по водоснабжению и водоотведению</span>
+                <input type="checkbox" name="professions[]" value="Инженер по водоснабжению и водоотведению"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Архитектор-проектировщик</span>
+                <input type="checkbox" name="professions[]" value="Архитектор-проектировщик"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Ландшафтный архитектор</span>
+                <input type="checkbox" name="professions[]" value="Ландшафтный архитектор"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Дизайнер садово-паркового искусства</span>
+                <input type="checkbox" name="professions[]" value="Дизайнер садово-паркового искусства"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист по лесному и лесопарковому хозяйству</span>
+                <input type="checkbox" name="professions[]" value="Специалист по лесному и лесопарковому хозяйству"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Технолог деревообработки</span>
+                <input type="checkbox" name="professions[]" value="Технолог деревообработки"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Промышленный эколог / Специалист по техносферной безопасности</span>
+                <input type="checkbox" name="professions[]"
+                       value="Промышленный эколог / Специалист по техносферной безопасности"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Инженер по техническому обслуживанию и ремонту автотранспорта</span>
+                <input type="checkbox" name="professions[]"
+                       value="Инженер по техническому обслуживанию и ремонту автотранспорта"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Инженер-технолог деревоперерабатывающих производств</span>
+                <input type="checkbox" name="professions[]" value="Инженер-технолог деревоперерабатывающих производств"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист по энерго- и ресурсосберегающим процессам в химической технологии</span>
+                <input type="checkbox" name="professions[]"
+                       value="Специалист по энерго- и ресурсосберегающим процессам в химической технологии"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист по экономической безопасности</span>
+                <input type="checkbox" name="professions[]" value="Специалист по экономической безопасности"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист по государственному и муниципальному управлению</span>
+                <input type="checkbox" name="professions[]"
+                       value="Специалист по государственному и муниципальному управлению"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Менеджер по недвижимости / Специалист по оценке бизнеса</span>
+                <input type="checkbox" name="professions[]"
+                       value="Менеджер по недвижимости / Специалист по оценке бизнеса" class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Бухгалтер / Экономист</span>
+                <input type="checkbox" name="professions[]" value="Бухгалтер / Экономист"
+                       class="filters__item-checkbox"/>
+            </li>
+            <li class="filters__item">
+                <span class="filters__item-label">Специалист банковского дела</span>
+                <input type="checkbox" name="professions[]" value="Специалист банковского дела"
+                       class="filters__item-checkbox"/>
+            </li>
         </ul>
         <div class="filters__salary">
-          <span class="filters__salary-label">Зарплата</span>
-          <input
-            type="number"
-            name="salary_from"
-            placeholder="От"
-            class="filters__salary-input"
-          />
-          <img
-            src="../static/media/sistem-media/cost.svg"
-            class="filters__salary-icon"
-            alt=""
-          />
-          <input
-            type="number"
-            name="salary_to"
-            placeholder="До"
-            class="filters__salary-input"
-          />
+            <span class="filters__salary-label">Зарплата</span>
+            <input type="number" name="salary_from" placeholder="От" class="filters__salary-input"/>
+            <img src="../static/media/sistem-media/cost.svg" class="filters__salary-icon" alt=""/>
+            <input type="number" name="salary_to" placeholder="До" class="filters__salary-input"/>
         </div>
-      </form>
-      <div class="filters__view">
-        <label class="filters__view-label">
-          <input
-            type="radio"
-            class="filters__view-radio"
-            name="feed_view"
-            value="grid"
-            checked
-          />
-          <div class="filters__view-btn filters__view-btn--grid">
-            <div class="filters__view-dot"></div>
-            <div class="filters__view-dot"></div>
-            <div class="filters__view-dot"></div>
-            <div class="filters__view-dot"></div>
-          </div>
-        </label>
-        <label class="filters__view-label">
-          <input
-            type="radio"
-            class="filters__view-radio"
-            name="feed_view"
-            value="list"
-          />
-          <div class="filters__view-btn filters__view-btn--list">
-            <div class="filters__view-line"></div>
-            <div class="filters__view-line"></div>
-            <div class="filters__view-line"></div>
-          </div>
-        </label>
-      </div>
-    </div>
+    </form>
 
-    <main id="filters-output" class="vacancies">
-      {% for vacancy in vacancies %}
-      <a
-        class="vacancy"
-        hx-get="/task/{{ vacancy.id }}"
-        hx-target="body"
-        hx-push-url="true"
-        href="view-application.html"
-      >
+    <div class="filters__view">
+        <label class="filters__view-label">
+            <input type="radio" class="filters__view-radio" name="feed_view" value="grid" checked/>
+            <div class="filters__view-btn filters__view-btn--grid">
+                <div class="filters__view-dot"></div>
+                <div class="filters__view-dot"></div>
+                <div class="filters__view-dot"></div>
+                <div class="filters__view-dot"></div>
+            </div>
+        </label>
+        <label class="filters__view-label">
+            <input type="radio" class="filters__view-radio" name="feed_view" value="list"/>
+            <div class="filters__view-btn filters__view-btn--list">
+                <div class="filters__view-line"></div>
+                <div class="filters__view-line"></div>
+                <div class="filters__view-line"></div>
+            </div>
+        </label>
+    </div>
+</div>
+
+{% endif %} {# конец условия полной страницы #}
+
+<main id="filters-output" class="vacancies">
+    {% for vacancy in vacancies %}
+    <a class="vacancy" href="/task/{{ vacancy.id }} ">
         <div class="vacancy__image-wrap">
-          <img
-            src="../static/media/sistem-media/Image.png"
-            class="vacancy__image"
-          />
+            <img src="../static/media/jobs_photo/{{ vacancy.id }}/1.png" class="vacancy__image"/>
         </div>
         <div class="vacancy__body">
-          <h3 class="vacancy__title">{{ vacancy.title }}</h3>
-          <div class="vacancy__meta">
-            <span class="vacancy__author">{{ vacancy.avtor }}</span
-            ><span class="vacancy__deadline">{{ vacancy.dedline }}</span>
-          </div>
-          <hr class="vacancy__divider" />
-          <div class="vacancy__footer">
-            <span class="vacancy__cost"
-              >до
-              <span class="vacancy__cost-value">{{ vacancy.cost }}</span></span
-            ><span class="vacancy__responses">{{ vacancy.otcklick }}</span>
-          </div>
+            <h3 class="vacancy__title">{{ vacancy.title }}</h3>
+            <div class="vacancy__meta">
+                <span class="vacancy__author">{{ vacancy.avtor }}</span>
+                <span class="vacancy__deadline">дедлайн: {{ vacancy.dedline }}</span>
+            </div>
+            <hr class="vacancy__divider"/>
+            <div class="vacancy__footer">
+                <span class="vacancy__cost">до <span class="vacancy__cost-value">{{ vacancy.cost }}</span></span>
+                <span class="vacancy__responses">откликов: {{ vacancy.otcklick }}</span>
+            </div>
         </div>
-      </a>
-      {% else %}
-      <div class="vacancies__empty">
+    </a>
+    {% else %}
+    <div class="vacancies__empty">
         Объявлений по таким критериям не найдено
-      </div>
-      {% endfor %}
-    </main>
-    <footer class="foot-hero" onmouseenter="fl1()" onmouseleave="fl0()">
-      <div class="foot-hero__content">
+    </div>
+    {% endfor %}
+</main>
+
+{% if not fragment %}
+
+<footer class="foot-hero" onmouseenter="fl1()" onmouseleave="fl0()">
+    <div class="foot-hero__content">
         <h1 class="brand">SKILLFORGE</h1>
         <p class="foot-hero__description">
-          Практикуйся, зарабатывай, наращивай портфолио вместе с нами.
+            Практикуйся, зарабатывай, наращивай портфолио вместе с нами.
         </p>
-      </div>
-    </footer>
-    <chat-component></chat-component>
+    </div>
+</footer>
 
-    <script src="../static/js/chat.js" defer></script>
-    <script src="../static/js/realtime.js"></script>
-    <script src="../static/js/shleif_cursor.js"></script>
-    <script src="../static/js/nav.js" defer></script>
-  </body>
+<chat-component></chat-component>
+
+<script src="../static/js/chat.js" defer></script>
+<script src="../static/js/realtime.js"></script>
+<script src="../static/js/shleif_cursor.js"></script>
+<script src="../static/js/nav.js" defer></script>
+
+</body>
 </html>
+{% endif %}
