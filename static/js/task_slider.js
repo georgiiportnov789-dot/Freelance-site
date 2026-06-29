@@ -1,43 +1,81 @@
 // static/js/task_slider.js
+
 function initTaskSlider(containerId, paginationId, images) {
   const container = document.getElementById(containerId);
   const pagination = document.getElementById(paginationId);
-  if (!container || !pagination) return;
+  if (!container || !pagination || !images || !images.length) return;
 
-  container.innerHTML = "";
-  pagination.innerHTML = "";
+  let currentIndex = 0;
+  let isScrolling = false;
+  let isDragging = false;
+  let dragStartX = 0;
+  let scrollStartLeft = 0;
+  let resizeTimeout = null;
 
-  if (!images || images.length === 0) {
-    container.innerHTML =
-      '<div style="background:#222;height:100%;display:flex;align-items:center;justify-content:center;color:#666;">Нет изображений</div>';
-    return;
+  // РќР°РґС‘Р¶РЅРѕРµ РїРѕР»СѓС‡РµРЅРёРµ С€РёСЂРёРЅС‹ РєРѕРЅС‚РµР№РЅРµСЂР°
+  function getContainerWidth() {
+    return (
+      container.clientWidth || container.getBoundingClientRect().width || 1
+    );
   }
 
-  images.forEach((src, index) => {
-    const slide = document.createElement("div");
-    slide.className = "create-task__media-slide";
-    const img = document.createElement("img");
-    img.src = src;
-    img.className = "create-task__media-img";
-    img.alt = "Фото задачи";
-    slide.appendChild(img);
-    container.appendChild(slide);
+  function render() {
+    container.innerHTML = "";
+    pagination.innerHTML = "";
 
-    const dot = document.createElement("span");
-    dot.className =
-      "create-task__media-dot" +
-      (index === 0 ? " create-task__media-dot--active" : "");
-    dot.dataset.index = index;
-    dot.addEventListener("click", function () {
-      const slideWidth = container.clientWidth;
-      container.scrollTo({ left: slideWidth * index, behavior: "smooth" });
+    images.forEach((url, i) => {
+      const slide = document.createElement("div");
+      slide.className = "create-task__media-slide";
+      const img = document.createElement("img");
+      img.className = "create-task__media-img";
+      img.src = url;
+      img.alt = "РР·РѕР±СЂР°Р¶РµРЅРёРµ Р·Р°РґР°С‡Рё";
+      slide.appendChild(img);
+      container.appendChild(slide);
+
+      const dot = document.createElement("span");
+      dot.className =
+        "create-task__media-dot" +
+        (i === currentIndex ? " create-task__media-dot--active" : "");
+      dot.dataset.index = i;
+      dot.addEventListener("click", function () {
+        scrollToSlide(parseInt(this.dataset.index));
+      });
+      pagination.appendChild(dot);
     });
-    pagination.appendChild(dot);
-  });
 
-  container.addEventListener("scroll", function () {
-    const slideWidth = container.clientWidth;
-    const currentIndex = Math.round(container.scrollLeft / slideWidth);
+    // РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ С‚РѕС‡РµРє РїСЂРё РїСЂРѕРєСЂСѓС‚РєРµ
+    container.addEventListener("scroll", function () {
+      if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+          if (images.length === 0) return;
+          const slideWidth = getContainerWidth();
+          const newIndex = Math.round(container.scrollLeft / slideWidth);
+          if (newIndex !== currentIndex && newIndex < images.length) {
+            currentIndex = newIndex;
+            updateDots();
+          }
+          isScrolling = false;
+        });
+        isScrolling = true;
+      }
+    });
+
+    // Р”РѕР¶РёРґР°РµРјСЃСЏ РѕС‚СЂРёСЃРѕРІРєРё Рё РїСЂРѕРєСЂСѓС‡РёРІР°РµРј Рє С‚РµРєСѓС‰РµРјСѓ РёРЅРґРµРєСЃСѓ
+    requestAnimationFrame(() => {
+      scrollToSlide(currentIndex);
+    });
+  }
+
+  function scrollToSlide(index) {
+    if (index < 0 || index >= images.length) return;
+    currentIndex = index;
+    const slideWidth = getContainerWidth();
+    container.scrollTo({ left: slideWidth * index, behavior: "smooth" });
+    updateDots();
+  }
+
+  function updateDots() {
     const dots = pagination.querySelectorAll(".create-task__media-dot");
     dots.forEach((dot, i) => {
       dot.classList.toggle(
@@ -45,8 +83,77 @@ function initTaskSlider(containerId, paginationId, images) {
         i === currentIndex,
       );
     });
+  }
+
+  render();
+
+  // РџРµСЂРµСЂР°СЃС‡С‘С‚ РїСЂРё РёР·РјРµРЅРµРЅРёРё СЂР°Р·РјРµСЂР° РѕРєРЅР° (debounce)
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      scrollToSlide(currentIndex);
+    }, 100);
+  });
+
+  // РџСЂРѕРєСЂСѓС‚РєР° РєРѕР»С‘СЃРёРєРѕРј
+  container.addEventListener(
+    "wheel",
+    function (e) {
+      if (images.length === 0) return;
+      e.preventDefault();
+      const dir = e.deltaY > 0 || e.deltaX > 0 ? 1 : -1;
+      const newIndex = Math.min(
+        Math.max(0, currentIndex + dir),
+        images.length - 1,
+      );
+      if (newIndex !== currentIndex) {
+        scrollToSlide(newIndex);
+      }
+    },
+    { passive: false },
+  );
+
+  // РџРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ РјС‹С€СЊСЋ
+  container.addEventListener("mousedown", function (e) {
+    if (images.length === 0) return;
+    isDragging = true;
+    dragStartX = e.clientX;
+    scrollStartLeft = container.scrollLeft;
+    container.style.cursor = "grabbing";
+    container.style.scrollBehavior = "auto";
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", function (e) {
+    if (!isDragging) return;
+    const dx = dragStartX - e.clientX;
+    container.scrollLeft = scrollStartLeft + dx;
+  });
+
+  document.addEventListener("mouseup", function () {
+    if (!isDragging) return;
+    isDragging = false;
+    container.style.cursor = "grab";
+    container.style.scrollBehavior = "smooth";
+    if (images.length > 0) {
+      const slideWidth = getContainerWidth();
+      const nearest = Math.round(container.scrollLeft / slideWidth);
+      const newIndex = Math.max(0, Math.min(images.length - 1, nearest));
+      scrollToSlide(newIndex);
+    }
+  });
+
+  // РљР»Р°РІРёС€Рё в†ђ в†’
+  document.addEventListener("keydown", function (e) {
+    if (images.length === 0) return;
+    const activeTag = document.activeElement?.tagName?.toLowerCase();
+    if (activeTag === "input" || activeTag === "textarea") return;
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      scrollToSlide(Math.max(0, currentIndex - 1));
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      scrollToSlide(Math.min(images.length - 1, currentIndex + 1));
+    }
   });
 }
-
-// Делаем функцию глобальной
-window.initTaskSlider = initTaskSlider;
